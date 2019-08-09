@@ -34,7 +34,7 @@
 				
 	?>
 	
-	<div class="row">
+	<div class="row" data-visibility-control="#AdType==image">
 		<div class="col-md-6">
 			<h4>Ad image</h4>
 			<?= $this->GoodForm->input('Ad.image', array('type' => 'image')) ?>
@@ -59,3 +59,7 @@
 	<?=$this->GoodForm->input('Ad.end_date', ['type' => 'date', 'label' => 'Display until', 'hint' => 'Blank for no end date']) ?>
 	
 	<?php $this->end(); ?>
+	
+	
+	
+	
