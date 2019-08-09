@@ -58,10 +58,10 @@ class Ad extends AppModel {
 					$options['source'] = Configure::read('Site.Title');
 				}
 				if (!@$options['medium']) {
-					$options['medium'] = 'ad link';
+					$options['medium'] = 'mrec';
 				}
 				if (!@$options['campaign']) {
-					$options['campaign'] = 'web banner';
+					$options['campaign'] = date('F') . ' web banner';
 				}
 
 				if(strpos($url, '?') !== false) {
