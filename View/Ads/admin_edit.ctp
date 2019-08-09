@@ -7,10 +7,13 @@
 	
 
 
-		 <?php 
-		 
-			 echo $this->GoodForm->input('Ad.enabled', ['type' => 'checkbox']);
-			 echo $this->GoodForm->input('Ad.admin_only', ['type' => 'checkbox', 'label' => 'Visible only for admins']);
+		 <?= $this->GoodForm->input('Ad.enabled', ['type' => 'checkbox']) ?>
+		 <div data-visibility-control="#AdEnabled">
+			 <?= $this->GoodForm->input('Ad.admin_only', ['type' => 'checkbox', 'label' => 'Visible only to admins']) ?>
+		</div>
+		
+		
+		<?php 
 		 echo $this->GoodForm->input('Ad.biller');
 		 echo $this->GoodForm->input('Ad.ad_type_id');
 		 echo $this->GoodForm->input('Ad.background', array('default' => 'FFFFFF', 'label' => 'Background colour'));
@@ -26,7 +29,7 @@
             echo $this->Form->input('Ad.id');
             
             
-            echo $this->GoodForm->input('Ad.title');
+            echo $this->GoodForm->input('Ad.title', ['class' => 'input-lg']);
             
             echo $this->GoodForm->input('Ad.destination_url', ['hint' => 'Include http(s):// for all external links']);
 			
