@@ -8,7 +8,7 @@ class AdsController extends AppController {
 	public $name = 'Ads';
 	
 	
-	public $uses = ['Ad', 'Analytic']; 
+	public $uses = ['Adverts.Ad', 'Analytic']; 
 	
 
 	public function click($id) {
@@ -38,7 +38,14 @@ class AdsController extends AppController {
 
 
 	public function admin_index() {
-
+		
+		
+		if (empty($this->Ad->AdType->find('list'))) {
+		
+			return $this->redirect(array('controller' => 'ad_types', 'action' => 'index', 'plugin' => 'adverts'));
+			
+		} 
+		
 		$this->data = $this->Ad->find('all');
 		
 		foreach ($this->request->data as &$row) {

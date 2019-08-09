@@ -4,7 +4,7 @@ class Ad extends AppModel {
 
 		public $name = 'Ad';
 
-		public $belongsTo = ['AdType'];
+		public $belongsTo = ['Adverts.AdType'];
 
 		public $actsAs = [
 			'Uploader.Attachment' => [

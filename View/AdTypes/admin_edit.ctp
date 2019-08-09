@@ -1,8 +1,6 @@
 <?php $this->extend('/Common/admin_edit'); ?>
 
-<div class="row">
 
-	<div class="col-md-8">
     <?php
             
             
@@ -10,14 +8,16 @@
             
             
             echo $this->GoodForm->input('AdType.title');
-            echo $this->GoodForm->input('AdType.width');
-            echo $this->GoodForm->input('AdType.height');
-            
-            echo $this->GoodForm->input('AdType.notes');
+			?>
 			
-			        
-    
-    ?>
-    </div>
-       
-</div>
+			<div class="row">
+				<div class="col-md-6">
+            <?= $this->GoodForm->input('AdType.width', ['hint' => 'For admin purposes only', 'append' => 'px', 'default' => 0]) ?>
+				</div>
+            <div class="col-md-6">
+            <?= $this->GoodForm->input('AdType.height', ['append' => 'px', 'default' => 0] ) ?>
+				</div>
+         </div>
+			
+          <?= $this->GoodForm->input('AdType.notes') ?>
+			

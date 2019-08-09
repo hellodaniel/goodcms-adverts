@@ -5,6 +5,8 @@ $this->extend('/Common/admin_index');
 $this->set('options', [
 	'create' => true, 
 	'export' => true, 
+		'header-actions' => [['action' => ['controller' => 'ad_types', 'plugin' => 'adverts', 'action' => 'index'], 'title' => 'Manage Ad Types']]
+
 ]); 
 
 
