@@ -37,3 +37,11 @@ CREATE TABLE IF NOT EXISTS `ad_types` (
 COMMIT;
 
 ALTER TABLE `ads` ADD `admin_only` TINYINT(1) NOT NULL DEFAULT '0' AFTER `enabled`; 
+ALTER TABLE `ads` CHANGE `imagemobile` `imagemobile` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL; 
+ALTER TABLE `ads` ADD `site_id` INT NOT NULL AFTER `modified`; 
+ALTER TABLE `ad_types` ADD `site_id` INT NOT NULL AFTER `weight`; 
+ALTER TABLE `ads` ADD INDEX(`site_id`); 
+ALTER TABLE `ad_types` ADD INDEX(`site_id`); 
+
+ALTER TABLE `ads` ADD  CONSTRAINT `ad_site` FOREIGN KEY (`site_id`) REFERENCES `sites`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `ad_types` ADD  CONSTRAINT `adtype_site` FOREIGN KEY (`site_id`) REFERENCES `sites`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
