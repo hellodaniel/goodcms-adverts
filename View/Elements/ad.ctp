@@ -3,8 +3,11 @@
 
 	if (!isset($count)) $count = 1; 
 
-	foreach (ClassRegistry::init('Ad')->get($type, $count) as $ad) { 
-	
+	foreach (ClassRegistry::init('Adverts.Ad')->get($type, $count) as $ad) { 
+		
+		// Skip admin-only ads
+		if ($ad['Ad']['admin_only'] && !$this->User->id()) continue; 
+		
 	?>
 		
 		<?php if ($ad['Ad']['html']) { ?>
