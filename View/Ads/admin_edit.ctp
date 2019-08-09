@@ -34,7 +34,7 @@
 				
 	?>
 	
-	<div class="row" data-visibility-control="#AdType==image">
+	<div class="row">
 		<div class="col-md-6">
 			<h4>Ad image</h4>
 			<?= $this->GoodForm->input('Ad.image', array('type' => 'image')) ?>
@@ -45,6 +45,7 @@
 		</div>
 		
 	</div>
+	
 	<div data-visibility-control="#AdType==html">
 		<?=$this->GoodForm->input('Ad.html', ['type' => 'code'])?>
 	</div>
