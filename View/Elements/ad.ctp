@@ -9,7 +9,7 @@
 		if ($ad['Ad']['admin_only'] && !$this->User->id()) continue; 
 		
 		
-		$tracking = "track(['Ad', 'Click', '{$ad['Ad']['id']}'], 2); track(['Ad', 'Click', '".h($ad['Ad']['title'])."'], 0); return true;"; 
+		$tracking = "track(['Ad', 'Click', '{$ad['Ad']['id']}', 1], 2); track(['Ad', 'Click', '".h($ad['Ad']['title'])."'], 0); return true;"; 
 		
 		$attribs = 'rel="nofollow" ' . 
 					  'href="'.$ad['Ad']['destination_url'].'" target="_blank" onclick="'.$tracking.'"';
