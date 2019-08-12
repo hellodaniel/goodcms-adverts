@@ -68,7 +68,12 @@ class AdsController extends AppController {
 	}
 
 	public function admin_edit($id = null, $layout = null) {
-
+		
+		// Add UTM links automatically if omitted
+		if (!empty($this->request->data['Ad']['destination_url'])) {
+			$this->request->data['Ad']['destination_url'] = $this->Ad->addTracking($this->data['Ad']['destination_url']); 
+		}
+		
 		$this->set('adTypes', $this->Ad->AdType->find('list'));
 		parent::admin_edit($id);
 
