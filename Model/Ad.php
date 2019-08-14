@@ -29,7 +29,7 @@ class Ad extends AppModel {
 			
 			if (is_numeric($type)) {
 				$conditions['Ad.ad_type_id'] = $type; 
-			} else {
+			} else if ($type) {
 				$conditions['AdType.title LIKE'] = $type . '%'; 
 			}
 			
