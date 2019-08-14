@@ -21,6 +21,9 @@
 		
 	}
 	
+	
+	if (empty($clicks)) return; 
+	
 	arsort($clicks);
 	
 	
