@@ -13,7 +13,7 @@
 		
 		$tracking = "track(['Ad', 'Click', '{$ad['Ad']['id']}', 1], 2); track(['Ad', 'Click', '".h($ad['Ad']['title'])."'], 0); return true;"; 
 		
-		$attribs = 'rel="nofollow" ' . 
+		$attribs = 'rel="sponsored" ' . 
 					  'href="'.$ad['Ad']['destination_url'].'" ' . 
 					  'onclick="'.$tracking.'" ' . 
 					  'target="_blank"';
