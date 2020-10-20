@@ -53,7 +53,11 @@ class AdsController extends AppController {
 			// Get the clicks from the analytics engine	
 	 		$row['Ad']['impressions'] += $this->Analytic->hits('Ad', 'Impression', $row['Ad']['title']);  
 			$row['Ad']['clicks'] += $this->Analytic->hits('Ad', 'Click', $row['Ad']['title']);  
-		
+			
+			// This needs to be sorted @todo: fixme! 
+			$row['Ad']['impressions'] += $this->Analytic->hits('Ad', 'Impression', $row['Ad']['id']);  
+			$row['Ad']['clicks'] += $this->Analytic->hits('Ad', 'Click', $row['Ad']['id']);  
+
 		}
 		
 		$this->layout = 'admin';
