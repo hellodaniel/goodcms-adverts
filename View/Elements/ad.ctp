@@ -33,24 +33,24 @@
 			
 			<?php if ($ad['Ad']['imagemobile']) { ?>
 				<a class="<?=$classes?> hidden-md hidden-lg" <?= $attribs ?>>
-					<?=$this->Html->image($ad['Ad']['imagemobile'], array('class' => 'img-responsive center-block', 'alt' => $ad['Ad']['title']))?>
+					<?=$this->Html->image($ad['Ad']['imagemobile'], array('class' => 'img-responsive center-block', 'alt' => $ad['Ad']['title'], 'style' => 'max-width: 100%;'))?>
 				</a>
 			<?php } ?>
 			
 		<?php } else if ($ad['Ad']['imagemobile']) { ?>
 	
 			<a class="<?=$classes?> hidden-sm hidden-xs" <?= $attribs ?>>
-				<?=$this->Html->image($ad['Ad']['image'], array('class' => 'img-responsive center-block', 'alt' => $ad['Ad']['title']))?>
+				<?=$this->Html->image($ad['Ad']['image'], array('class' => 'img-responsive center-block', 'alt' => $ad['Ad']['title'], 'style' => 'max-width: 100%;'))?>
 			</a>
 		
 			<a class="<?=$classes?> hidden-md hidden-lg" <?= $attribs ?>>
-				<?=$this->Html->image($ad['Ad']['imagemobile'], array('class' => 'img-responsive center-block', 'alt' => $ad['Ad']['title']))?>
+				<?=$this->Html->image($ad['Ad']['imagemobile'], array('class' => 'img-responsive center-block', 'alt' => $ad['Ad']['title'], 'style' => 'max-width: 100%;'))?>
 			</a>
 		
 		<?php } else { ?>
 		
 			<a class="<?=$classes?>" <?= $attribs ?>>
-				<?=$this->Html->image($ad['Ad']['image'], array('class' => 'img-responsive center-block', 'alt' => $ad['Ad']['title']))?>
+				<?=$this->Html->image($ad['Ad']['image'], array('class' => 'img-responsive center-block', 'alt' => $ad['Ad']['title'], 'style' => 'max-width: 100%;'))?>
 			</a>
 	
 		<?php } ?>
