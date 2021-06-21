@@ -3,9 +3,18 @@
 
 	if (!isset($count)) $count = 1; 
 	
+	$cache_key = 'ad-'.$type.'-'.$count; 
 	
+	$ads = ClassRegistry::init('Adverts.Ad')->get($type, $count); 
 	
-	foreach (ClassRegistry::init('Adverts.Ad')->get($type, $count) as $ad) { 
+	// disused for the moment
+	if (!$ads) {
+		$ads = Cache::read($cache_key, 'short'); 
+		$ads = ClassRegistry::init('Adverts.Ad')->get($type, $count); 
+		Cache::write($cache_key, $ads, 'short'); 
+	}
+	
+	foreach ($ads as $ad) { 
 		
 		// Skip admin-only ads
 		if ($ad['Ad']['admin_only'] && !$this->User->id()) continue; 
@@ -23,6 +32,32 @@
 		
 		if (!empty($class)) $classes .= ' ' . $class; 
 		
+		$image_attribs = [
+			'class' => 'img-responsive center-block', 
+			'alt' => $ad['Ad']['title'], 
+			'style' => 'max-width: 100%;'
+		]; 
+		
+		
+		if ($ad['Ad']['image']) { 
+			$image_size = $this->App->imageSize($ad['Ad']['image']); 
+			if ($image_size[0] && $image_size[1]) { 
+			 	  $image_attribs['w'] = $image_size[0]*1; 
+				  $image_attribs['h'] = $image_size[1]*1;
+			}
+		}
+		
+		if ($ad['Ad']['imagemobile']) {
+			$mobile_attribs = $image_attribs; 
+			$image_size = $this->App->imageSize($ad['Ad']['imagemobile']); 
+			
+			if ($image_size[0] && $image_size[1]) { 
+			 	  $mobile_attribs['w'] = $image_size[0]*1;
+				  $mobile_attribs['h'] = $image_size[1]*1; 
+			}
+		} 
+		
+		
 	?>
 		
 		<?php if ($ad['Ad']['html']) { ?>
@@ -33,24 +68,24 @@
 			
 			<?php if ($ad['Ad']['imagemobile']) { ?>
 				<a class="<?=$classes?> hidden-md hidden-lg" <?= $attribs ?>>
-					<?=$this->Html->image($ad['Ad']['imagemobile'], array('class' => 'img-responsive center-block', 'alt' => $ad['Ad']['title'], 'style' => 'max-width: 100%;'))?>
+					<?=$this->Html->image($ad['Ad']['imagemobile'], $mobile_attribs)?>
 				</a>
 			<?php } ?>
 			
 		<?php } else if ($ad['Ad']['imagemobile']) { ?>
 	
 			<a class="<?=$classes?> hidden-sm hidden-xs" <?= $attribs ?>>
-				<?=$this->Html->image($ad['Ad']['image'], array('class' => 'img-responsive center-block', 'alt' => $ad['Ad']['title'], 'style' => 'max-width: 100%;'))?>
+				<?=$this->Html->image($ad['Ad']['image'], $image_attribs)?>
 			</a>
 		
 			<a class="<?=$classes?> hidden-md hidden-lg" <?= $attribs ?>>
-				<?=$this->Html->image($ad['Ad']['imagemobile'], array('class' => 'img-responsive center-block', 'alt' => $ad['Ad']['title'], 'style' => 'max-width: 100%;'))?>
+				<?=$this->Html->image($ad['Ad']['imagemobile'], $mobile_attribs)?>
 			</a>
 		
 		<?php } else { ?>
 		
 			<a class="<?=$classes?>" <?= $attribs ?>>
-				<?=$this->Html->image($ad['Ad']['image'], array('class' => 'img-responsive center-block', 'alt' => $ad['Ad']['title'], 'style' => 'max-width: 100%;'))?>
+				<?=$this->Html->image($ad['Ad']['image'], $image_attribs)?>
 			</a>
 	
 		<?php } ?>
