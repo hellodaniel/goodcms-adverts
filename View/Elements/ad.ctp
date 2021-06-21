@@ -5,11 +5,10 @@
 	
 	$cache_key = 'ad-'.$type.'-'.$count; 
 	
-	$ads = ClassRegistry::init('Adverts.Ad')->get($type, $count); 
+	$ads = Cache::read($cache_key, 'short'); 
 	
 	// disused for the moment
 	if (!$ads) {
-		$ads = Cache::read($cache_key, 'short'); 
 		$ads = ClassRegistry::init('Adverts.Ad')->get($type, $count); 
 		Cache::write($cache_key, $ads, 'short'); 
 	}

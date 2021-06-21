@@ -20,10 +20,8 @@ $this->set('options', [
      		<th>Dates</th>
      		<th>Biller</th>
      		<th>Type</th>
-     		<th>Impressions</th>
-			<th>Clicks</th>
-			<th>CTR</th>
-     		<th></th>
+     		<th>Clicks</th>
+			<th></th>
      	
      	</tr>
      </thead>
@@ -64,13 +62,7 @@ $this->set('options', [
              </td>
             
             <td>
-         		  	<?=$this->App->bigNumber($row['Ad']['impressions'])?>
-				   </td>
-            <td>
               	<?=$this->App->bigNumber($row['Ad']['clicks'])?> 
-            </td>
-            <td>
-              <h5><?= $row['Ad']['impressions'] && $row['Ad']['clicks'] ? round(($row['Ad']['clicks']/$row['Ad']['impressions']) * 100, 2) . '%' : '' ?> </h5>
             </td>
             <td class="actions">
                 <div class="btn-group">
