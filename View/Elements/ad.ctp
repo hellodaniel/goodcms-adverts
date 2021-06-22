@@ -41,8 +41,8 @@
 		if ($ad['Ad']['image']) { 
 			$image_size = $this->App->imageSize($ad['Ad']['image']); 
 			if ($image_size[0] && $image_size[1]) { 
-			 	  $image_attribs['w'] = $image_size[0]*1; 
-				  $image_attribs['h'] = $image_size[1]*1;
+			 	  $image_attribs['width'] = $image_size[0]*1; 
+				  $image_attribs['height'] = $image_size[1]*1;
 			}
 		}
 		
@@ -51,8 +51,8 @@
 			$image_size = $this->App->imageSize($ad['Ad']['imagemobile']); 
 			
 			if ($image_size[0] && $image_size[1]) { 
-			 	  $mobile_attribs['w'] = $image_size[0]*1;
-				  $mobile_attribs['h'] = $image_size[1]*1; 
+			 	  $mobile_attribs['width'] = $image_size[0]*1;
+				  $mobile_attribs['height'] = $image_size[1]*1; 
 			}
 		} 
 		
