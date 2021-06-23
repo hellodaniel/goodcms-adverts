@@ -37,7 +37,7 @@
 			'class' => 'img-responsive center-block', 
 			'alt' => $ad['Ad']['title'], 
 			'style' => 'max-width: 100%;', 
-			'layout' => 'responsive'
+			'loading' => 'lazy'
 		]; 
 		
 		
