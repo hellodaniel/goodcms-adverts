@@ -1,4 +1,4 @@
-<div class="hidden-print"><?php 
+<?php 
 
 
 	if (!isset($count)) $count = 1; 
@@ -8,11 +8,14 @@
 	$ads = Cache::read($cache_key, 'short'); 
 	
 	// disused for the moment
-	if (!$ads) {
+	if ($ads === false) {
 		$ads = ClassRegistry::init('Adverts.Ad')->get($type, $count); 
 		Cache::write($cache_key, $ads, 'short'); 
 	}
 	
+	
+	if (empty($ads)) return; 
+
 	foreach ($ads as $ad) { 
 		
 		// Skip admin-only ads
@@ -22,14 +25,13 @@
 		$tracking = "track(['Ad', 'Click', '{$ad['Ad']['id']}', 1], 2); track(['Ad', 'Click', '".h($ad['Ad']['title'])."'], 0); return true;"; 
 		
 		$attribs = 'rel="sponsored" ' . 
-					  'href="'.$ad['Ad']['destination_url'].'" ' . 
-					  'onclick="'.$tracking.'" ' . 
-					  'target="_blank"';
+					   'style="display: block; clear: both;" ' . 
+					   'href="'.$ad['Ad']['destination_url'].'" ' . 
+					   'onclick="'.$tracking.'" ' . 
+					   'target="_blank"';
 		
 		
-		
-		
-	$classes = 'ad adtype-' . $ad['AdType']['id'] . ' adtype-' . $this->App->slug($ad['AdType']['title']); 
+		$classes = 'hidden-print ad adtype-' . $ad['AdType']['id'] . ' adtype-' . $this->App->slug($ad['AdType']['title']); 
 		
 		if (!empty($class)) $classes .= ' ' . $class; 
 		
@@ -79,9 +81,9 @@
 			</a>
 	
 		<?php } ?>
-
+		<script>jQuery(document).ready(function() { track(['Ad', 'Impression', '<?=h($ad['Ad']['title'])?>'], 0); }); </script>
 	<?php 	
 	
 	}
 
-?></div>
+?>
