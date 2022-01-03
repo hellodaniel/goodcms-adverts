@@ -21,6 +21,7 @@ $this->set('options', [
      		<th>Biller</th>
      		<th>Type</th>
      		<th>Clicks</th>
+			<th>Impressions</th>
 			<th></th>
      	
      	</tr>
@@ -63,6 +64,9 @@ $this->set('options', [
             
             <td>
               	<?=$this->App->bigNumber($row['Ad']['clicks'])?> 
+            </td>
+            <td>
+              	<?=$this->App->bigNumber($row['Ad']['impressions'])?> 
             </td>
             <td class="actions">
                 <div class="btn-group">

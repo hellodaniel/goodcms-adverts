@@ -5,12 +5,12 @@
 	
 	$cache_key = 'ad-'.$type.'-'.$count; 
 	
-	$ads = Cache::read($cache_key, 'short'); 
-	
+	// $ads = Cache::read($cache_key, 'short'); 
+	$ads = false; 
 	// disused for the moment
 	if ($ads === false) {
 		$ads = ClassRegistry::init('Adverts.Ad')->get($type, $count); 
-		Cache::write($cache_key, $ads, 'short'); 
+		// Cache::write($cache_key, $ads, 'short'); 
 	}
 	
 	
@@ -80,7 +80,12 @@
 			</a>
 	
 		<?php } ?>
-		<script>jQuery(document).ready(function() { track(['Ad', 'Impression', '<?=h($ad['Ad']['title'])?>'], 0); }); </script>
+		<script>
+			jQuery(document).ready(function() { 
+				$.ajax('/adverts/ads/impression/<?=$ad['Ad']['id']?>'); 
+				track(['Ad', 'Impression', '<?=h($ad['Ad']['title'])?>'], 0); 
+			}); 
+		</script>
 	<?php 	
 	
 	}

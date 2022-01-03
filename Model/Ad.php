@@ -39,9 +39,9 @@ class Ad extends AppModel {
 			
 			$ads = $this->find('all', ['limit' => $count, 'conditions' => $conditions, 'order' => $order]);
 
-			foreach ($ads as $ad) {		
-				ClassRegistry::init('Analytic')->hit('Ad', 'Impression', $ad['Ad']['title']);
-			}
+			// foreach ($ads as $ad) {		
+			//	ClassRegistry::init('Analytic')->hit('Ad', 'Impression', $ad['Ad']['title']);
+			// }
 
 			return $ads;
 

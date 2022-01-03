@@ -10,7 +10,9 @@ class AdsController extends AppController {
 	
 	public $uses = ['Adverts.Ad', 'Analytic']; 
 	
-
+	public $components = ['Export']; 
+	
+	
 	public function click($id) {
 
 		// Later do this in the MODEL
@@ -26,6 +28,17 @@ class AdsController extends AppController {
 			throw new NotFoundException('This advertisment is no longer running');
 		}
 
+	}
+	
+	public function impression($id) {
+		
+		$this->Analytic->hit('Ad', 'Impression', $id);
+		$this->Ad->updateAll(
+			['Ad.impressions' => 'Ad.impressions + 1'],
+      	['Ad.id' => $id], ['callbacks' => false]);
+				
+		$this->Export->json(['id' => $id]); 
+		
 	}
 
 
@@ -52,10 +65,10 @@ class AdsController extends AppController {
 			
 			// Get the clicks from the analytics engine	
 	 		$row['Ad']['impressions'] += $this->Analytic->hits('Ad', 'Impression', $row['Ad']['title']);  
-			$row['Ad']['clicks'] += $this->Analytic->hits('Ad', 'Click', $row['Ad']['title']);  
+			// $row['Ad']['clicks'] += $this->Analytic->hits('Ad', 'Click', $row['Ad']['title']);  
 			
 			// This needs to be sorted @todo: fixme! 
-			$row['Ad']['impressions'] += $this->Analytic->hits('Ad', 'Impression', $row['Ad']['id']);  
+			// $row['Ad']['impressions'] += $this->Analytic->hits('Ad', 'Impression', $row['Ad']['id']);  
 			$row['Ad']['clicks'] += $this->Analytic->hits('Ad', 'Click', $row['Ad']['id']);  
 
 		}
