@@ -20,8 +20,9 @@ $this->set('options', [
      		<th>Dates</th>
      		<th>Biller</th>
      		<th>Type</th>
-     		<th>Clicks</th>
+     		<th>Hits</th>
 			<th>Impressions</th>
+			<th>Clicks</th>
 			<th></th>
      	
      	</tr>
@@ -62,12 +63,9 @@ $this->set('options', [
              	<?=$row['AdType']['title']?>
              </td>
             
-            <td>
-              	<?=$this->App->bigNumber($row['Ad']['clicks'])?> 
-            </td>
-            <td>
-              	<?=$this->App->bigNumber($row['Ad']['impressions'])?> 
-            </td>
+            <td><?=$this->App->bigNumber($row['Ad']['hits'])?> </td>
+            <td><?=$this->App->bigNumber($row['Ad']['impressions'])?> </td>
+            <td><?=$this->App->bigNumber($row['Ad']['clicks'])?> </td>
             <td class="actions">
                 <div class="btn-group">
             	<?=$this->element('admin/index-actions', array('id' => $row['Ad']['id']))?>

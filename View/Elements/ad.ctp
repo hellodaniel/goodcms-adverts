@@ -1,25 +1,31 @@
 <?php 
-
+	
+	
+	$AdModel = ClassRegistry::init('Adverts.Ad'); 
 
 	if (!isset($count)) $count = 1; 
 	
 	$cache_key = 'ad-'.$type.'-'.$count; 
 	
-	// $ads = Cache::read($cache_key, 'short'); 
+	$ads = Cache::read($cache_key, 'short'); 
 	$ads = false; 
 	// disused for the moment
 	if ($ads === false) {
-		$ads = ClassRegistry::init('Adverts.Ad')->get($type, $count); 
-		// Cache::write($cache_key, $ads, 'short'); 
+		$ads = $AdModel->get($type, $count); 
+		Cache::write($cache_key, $ads, 'short'); 
 	}
 	
 	
 	if (empty($ads)) return; 
-
+	
+	
 	foreach ($ads as $ad) { 
+		
 		
 		// Skip admin-only ads
 		if ($ad['Ad']['admin_only'] && !$this->User->id()) continue; 
+		
+		$ids[$ad['Ad']['id']] = $ad['Ad']['title']; 
 		
 		
 		$tracking = "track(['Ad', 'Click', '{$ad['Ad']['id']}', 1], 2); track(['Ad', 'Click', '".h($ad['Ad']['title'])."'], 0); return true;"; 
@@ -48,10 +54,7 @@
 			$mobile_attribs = $image_attribs; 
 		} 
 		
-		
-	?>
-		
-		<?php if ($ad['Ad']['html']) { ?>
+	 	if ($ad['Ad']['html']) { ?>
 			
 			<div class="<?=$classes?> hidden-sm hidden-xs">
 				<?=$ad['Ad']['html']?>
@@ -78,16 +81,18 @@
 			<a class="<?=$classes?>" <?= $attribs ?>>
 				<?=$this->App->image($ad['Ad']['image'], $image_attribs)?>
 			</a>
-	
-		<?php } ?>
-		<script>
-			jQuery(document).ready(function() { 
-				$.ajax('/adverts/ads/impression/<?=$ad['Ad']['id']?>'); 
-				track(['Ad', 'Impression', '<?=h($ad['Ad']['title'])?>'], 0); 
-			}); 
-		</script>
-	<?php 	
-	
-	}
-
+		<?php } 
+		
+		// Push a hit
+		$AdModel->updateAll(
+			['Ad.hits' => 'Ad.hits + 1'],
+			['Ad.id' => $ad['Ad']['id']]); 
+		
 ?>
+		<script>
+			setTimeout(function() { 
+				jQuery.ajax('/adverts/ads/impression/<?=$ad['Ad']['id']?>'); 
+				track(['Ad', 'Impression', '<?=h($ad['Ad']['title'])?>'], 0); 
+			}, 400); 
+		</script>
+<?php } ?>
