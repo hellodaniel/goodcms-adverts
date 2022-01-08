@@ -25,20 +25,20 @@ class AdsController extends AppController {
 		$src = $_GET['src']; 
 		
 		// Memory cache is going to be faster
-		$content = Cache::read('ad-'.$id); 
+		$content = Cache::read('ad-'.md5($src)); 
 		
 		// Load it from the file cache if it's not in memory
 		// and push it back into memory
 		if (!$content) {
-			$content = Cache::read('ad-'.$id, 'long'); 
-			if ($content) Cache::write('ad-'.$id, $content); 
+			$content = Cache::read('ad-'.md5($src), 'long'); 
+			if ($content) Cache::write('ad-'.md5($src), $content); 
 		}
 		
 		if (!$content) {
 			$content = file_get_contents($src); 
 			$mime = mime_content_type($src); 
-			Cache::write('ad-'.$id, $content); 
-			Cache::write('ad-'.$id, $content, 'long'); 
+			Cache::write('ad-'.md5($src), $content); 
+			Cache::write('ad-'.md5($src), $content, 'long'); 
 		}
 		
 		$ext = strtolower(pathinfo($src)['extension']); 
