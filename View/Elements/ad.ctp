@@ -38,7 +38,7 @@
 					   'target="_blank"';
 		
 		
-		$classes = 'hidden-print ad adtype-' . $ad['AdType']['id'] . ' adtype-' . $this->App->slug($ad['AdType']['title']); 
+		$classes = 'hidden-print good-advert good-advert-type-' . $ad['AdType']['id'] . ' good-advert-type-' . $this->App->slug($ad['AdType']['title']); 
 		
 		if (!empty($class)) $classes .= ' ' . $class; 
 		
