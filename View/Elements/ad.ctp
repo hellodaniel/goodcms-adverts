@@ -21,13 +21,15 @@
 	
 	foreach ($ads as $ad) { 
 		
+		if (!empty($before)) echo $before; 
 		
 		// Skip admin-only ads
 		if ($ad['Ad']['admin_only'] && !$this->User->id()) continue; 
 		
 		$ids[$ad['Ad']['id']] = $ad['Ad']['title']; 
 		
-		
+		// Track the ad internally AND via Google Analytics
+		// Internally we use the ID though
 		$tracking = "track(['Ad', 'Click', '{$ad['Ad']['id']}', 1], 2); track(['Ad', 'Click', '".h($ad['Ad']['title'])."'], 0); return true;"; 
 		
 		$attribs = 'rel="sponsored" ' . 
@@ -48,7 +50,10 @@
 		]; 
 		
 		
-	
+		$find = '/<img(.*?)src="(.*?)"/'; 
+		$replace = '<img$1src="/adverts/ads/display/'.$ad['Ad']['id'].'?src=$2"'; 
+		
+		
 		
 		if ($ad['Ad']['imagemobile']) {
 			$mobile_attribs = $image_attribs; 
@@ -62,33 +67,29 @@
 			
 			<?php if ($ad['Ad']['imagemobile']) { ?>
 				<a class="<?=$classes?> hidden-md hidden-lg" <?= $attribs ?>>
-					<?=$this->App->image($ad['Ad']['imagemobile'], $mobile_attribs)?>
+					<?= preg_replace($find, $replace, $this->App->image($ad['Ad']['imagemobile'], $mobile_attribs))?>
 				</a>
 			<?php } ?>
 			
 		<?php } else if ($ad['Ad']['imagemobile']) { ?>
 			
 			<a class="<?=$classes?> hidden-sm hidden-xs" <?= $attribs ?>>
-				<?=$this->App->image($ad['Ad']['image'], $image_attribs)?>
+				<?= preg_replace($find, $replace, $this->App->image($ad['Ad']['image'], $image_attribs))?>
 			</a>
 		
 			<a class="<?=$classes?> hidden-md hidden-lg" <?= $attribs ?>>
-				<?=$this->App->image($ad['Ad']['imagemobile'], $mobile_attribs)?>
+				<?=preg_replace($find, $replace, $this->App->image($ad['Ad']['imagemobile'], $mobile_attribs))?>
 			</a>
 		
 		<?php } else { ?>
 		
 			<a class="<?=$classes?>" <?= $attribs ?>>
-				<?=$this->App->image($ad['Ad']['image'], $image_attribs)?>
+				<?=preg_replace($find, $replace, $this->App->image($ad['Ad']['image'], $image_attribs))?>
 			</a>
-		<?php } 
+			
+		<?php } ?>
+		<?php if (!empty($after)) echo $after; ?>
 		
-		// Push a hit
-		$AdModel->updateAll(
-			['Ad.hits' => 'Ad.hits + 1'],
-			['Ad.id' => $ad['Ad']['id']]); 
-		
-?>
 		<script>
 			setTimeout(function() { 
 				jQuery.ajax('/adverts/ads/impression/<?=$ad['Ad']['id']?>'); 

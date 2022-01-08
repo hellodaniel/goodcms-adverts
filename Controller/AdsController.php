@@ -13,6 +13,54 @@ class AdsController extends AppController {
 	public $components = ['Export']; 
 	
 	
+	public function display($id) {
+		
+		$this->autoRender = false; 
+		
+		// Push a hit
+		$this->Ad->updateAll(
+			['Ad.hits' => 'Ad.hits + 1'],
+			['Ad.id' => $id]); 
+		
+		$src = $_GET['src']; 
+		
+		// Memory cache is going to be faster
+		$content = Cache::read('ad-'.$id); 
+		
+		// Load it from the file cache if it's not in memory
+		// and push it back into memory
+		if (!$content) {
+			$content = Cache::read('ad-'.$id, 'long'); 
+			if ($content) Cache::write('ad-'.$id, $content); 
+		}
+		
+		if (!$content) {
+			$content = file_get_contents($src); 
+			$mime = mime_content_type($src); 
+			Cache::write('ad-'.$id, $content); 
+			Cache::write('ad-'.$id, $content, 'long'); 
+		}
+		
+		$ext = strtolower(pathinfo($src)['extension']); 
+		
+		$mimes = [
+			'png' => 'image/png',
+	      'jpe' => 'image/jpeg',
+	      'jpeg' => 'image/jpeg',
+	      'jpg' => 'image/jpeg',
+	      'gif' => 'image/gif',
+		]; 
+		
+		
+		header('Content-type: ' . $mimes[$ext]); 
+		header('Content-length: ' . strlen($content)); 
+		
+		echo $content; 
+		
+		
+	}
+	
+	
 	public function click($id) {
 
 		// Later do this in the MODEL
