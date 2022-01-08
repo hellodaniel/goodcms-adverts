@@ -11,6 +11,13 @@ $this->set('options', [
 
 
 ?>
+<?php $this->append('secondary-sidebar'); ?>
+		
+		<p><strong>Impression:</strong> An ad <em>impression</em> occurs when an ad is displayed to a user. The "impression" event is fired internally via javascript 400ms after the ad has been displayed on the page and is also sent to Google Analytics (if configured).</p>
+		
+		<p><strong>Hit:</strong> An ad is <em>hit</em> when it's image content is loaded by a browser. This method does not use javascript but may be subverted by browser cache or ad blockers and may also be triggered by bots.</p>
+		
+<?php $this->end(); ?>
 	
     <table class="table table-hover index_table">
      <thead>
