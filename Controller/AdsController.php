@@ -13,6 +13,15 @@ class AdsController extends AppController {
 	public $components = ['Export']; 
 	
 	
+	function beforeFilter() {
+  		
+		// Don't bother with any site loading or checking when running an impression
+		if ($this->action == 'impression' || $this->action == 'display') return; 
+		parent::beforeFilter(); 
+	
+	}
+	
+	
 	public function display($id) {
 		
 		$this->autoRender = false; 
@@ -52,6 +61,10 @@ class AdsController extends AppController {
 		// Push the content out THEN do the DB update
 		$this->response->header('Content-type', $mimes[strtolower($ext)]); 
 		$this->response->header('Content-length',  strlen($content)); 
+		
+		$this->response->header('Connection', 'close');  
+		ignore_user_abort(true);
+		
 		$this->response->body($content); 
 		$this->response->type(['image' => $mimes[strtolower($ext)]]); 
 		$this->response->type('image'); 
@@ -60,6 +73,7 @@ class AdsController extends AppController {
 		$this->response->send(); 
 		
 		// Push a hit
+		$this->Ad->unbindModel(['belongsTo' => ['AdType']]);
 		$this->Ad->updateAll(
 			['Ad.hits' => 'Ad.hits + 1'],
 			['Ad.id' => $id]); 
@@ -90,11 +104,20 @@ class AdsController extends AppController {
 		
 		$this->autoRender = false; 
 		
+		$this->response->header('Connection', 'close');  
+		ignore_user_abort(true);
+		
+		$body = json_encode([$id => time()]); 
+		
 		$this->response->header('Content-type', 'application/json'); 
-		$this->response->body(json_encode(['id' => $id])); 
+		$this->response->header('Content-length', strlen($body)); 
+		$this->response->body($body); 
+		$this->response->type('json'); 
 		$this->response->send(); 
 		
+		// Now do the DB things
 		$this->Analytic->hit('Ad', 'Impression', $id);
+		$ad = $this->Ad->findById($id);
 		$this->Ad->updateAll(
 			['Ad.impressions' => 'Ad.impressions + 1'],
       	['Ad.id' => $id], ['callbacks' => false]);
