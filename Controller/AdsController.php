@@ -16,7 +16,11 @@ class AdsController extends AppController {
 	function beforeFilter() {
   		
 		// Don't bother with any site loading or checking when running an impression
-		if ($this->action == 'impression' || $this->action == 'display') return; 
+		if ($this->action == 'impression' || $this->action == 'display') {
+			$this->Components->unload('Auth');
+			$this->Components->unload('DebugKit.Toolbar');
+			return; 
+		} 
 		parent::beforeFilter(); 
 	
 	}
@@ -107,17 +111,17 @@ class AdsController extends AppController {
 		$this->response->header('Connection', 'close');  
 		ignore_user_abort(true);
 		
-		$body = json_encode([$id => time()]); 
+		$body = "\x30\r\n\r\n";
 		
 		$this->response->header('Content-type', 'application/json'); 
 		$this->response->header('Content-length', strlen($body)); 
 		$this->response->body($body); 
-		$this->response->type('json'); 
+		$this->response->type('text'); 
 		$this->response->send(); 
 		
 		// Now do the DB things
 		$this->Analytic->hit('Ad', 'Impression', $id);
-		$ad = $this->Ad->findById($id);
+		$this->Ad->unbindModel(['belongsTo' => ['AdType']]);
 		$this->Ad->updateAll(
 			['Ad.impressions' => 'Ad.impressions + 1'],
       	['Ad.id' => $id], ['callbacks' => false]);
