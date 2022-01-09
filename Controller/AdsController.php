@@ -17,12 +17,10 @@ class AdsController extends AppController {
 		
 		$this->autoRender = false; 
 		
-		// Push a hit
-		$this->Ad->updateAll(
-			['Ad.hits' => 'Ad.hits + 1'],
-			['Ad.id' => $id]); 
 		
 		$src = $_GET['src']; 
+		$ext = pathinfo($id)['extension']; 
+		$id = str_replace('.'.$ext, '', $id); 
 		
 		// Memory cache is going to be faster
 		$content = Cache::read('ad-'.md5($src)); 
@@ -41,8 +39,6 @@ class AdsController extends AppController {
 			Cache::write('ad-'.md5($src), $content, 'long'); 
 		}
 		
-		$ext = strtolower(pathinfo($src)['extension']); 
-		
 		$mimes = [
 			'png' => 'image/png',
 	      'jpe' => 'image/jpeg',
@@ -51,12 +47,24 @@ class AdsController extends AppController {
 	      'gif' => 'image/gif',
 		]; 
 		
+		if (!$ext) $ext = pathinfo($src)['extension']; 
+			
+		// Push the content out THEN do the DB update
+		$this->response->header('Content-type', $mimes[strtolower($ext)]); 
+		$this->response->header('Content-length',  strlen($content)); 
+		$this->response->body($content); 
+		$this->response->type(['image' => $mimes[strtolower($ext)]]); 
+		$this->response->type('image'); 
+		$this->response->compress($content); 
 		
-		header('Content-type: ' . $mimes[$ext]); 
-		header('Content-length: ' . strlen($content)); 
+		$this->response->send(); 
 		
-		echo $content; 
+		// Push a hit
+		$this->Ad->updateAll(
+			['Ad.hits' => 'Ad.hits + 1'],
+			['Ad.id' => $id]); 
 		
+		exit(); 
 		
 	}
 	
@@ -80,12 +88,18 @@ class AdsController extends AppController {
 	
 	public function impression($id) {
 		
+		$this->autoRender = false; 
+		
+		$this->response->header('Content-type', 'application/json'); 
+		$this->response->body(json_encode(['id' => $id])); 
+		$this->response->send(); 
+		
 		$this->Analytic->hit('Ad', 'Impression', $id);
 		$this->Ad->updateAll(
 			['Ad.impressions' => 'Ad.impressions + 1'],
       	['Ad.id' => $id], ['callbacks' => false]);
-				
-		$this->Export->json(['id' => $id]); 
+		
+		exit(); 
 		
 	}
 

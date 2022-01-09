@@ -50,8 +50,8 @@
 		]; 
 		
 		
-		$find = '/<img(.*?)src="(.*?)"/'; 
-		$replace = '<img$1src="/adverts/ads/display/'.$ad['Ad']['id'].'?src=$2"'; 
+		$find = '/<img(.*?)src="(.*?)((?i)\.gif|\.png|\.jpg|\.jpeg)"/'; 
+		$replace = '<img$1src="/adverts/ads/display/'.$ad['Ad']['id'].'$3?src=$2$3&time='.time().'"'; 
 		
 		
 		
