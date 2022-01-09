@@ -17,16 +17,18 @@ $this->set('options', [
 		
 		<p><strong>Hit:</strong> An ad is <em>hit</em> when it's image content is loaded by a browser. This method does not use javascript but may be subverted by browser cache or ad blockers and may also be triggered by bots.</p>
 		
+		<div class="alert alert-warning">n.b.: Due to the changes in impression algorithms we reset impresssions at <?= $this->App->shortDate(filemtime('../Plugin/Adverts/sql/02 Reset the numbers.sql')) ?>. If you want to see historic impressions prior to that date please <a href="?historic=true">click here.</a></div>
+		
 <?php $this->end(); ?>
 	
     <table class="table table-hover index_table">
      <thead>
      	<tr>
 			
-			<th>Status</th>
+			<th class="filterable">Status</th>
      		<th>Dates</th>
      		<th>Biller</th>
-     		<th>Type</th>
+     		<th class="filterable">Type</th>
      		<th>Hits</th>
 			<th>Impressions</th>
 			<th>Clicks</th>
@@ -38,24 +40,19 @@ $this->set('options', [
        <?php foreach ($this->data as $row) { ?>
 		  <tr data-id="<?=$row['Ad']['id']?>">   
 
-						<td>
-							<span class="hidden"><?=$row['Ad']['enabled'] ? '0' : '1' ?></span>
-						 <?php if (!$row['Ad']['enabled']) { ?>
-							 <span class="label label-danger">Off</span>
+						<td><?php if (!$row['Ad']['enabled']) { ?>
+							<span class="label label-danger">Off</span>
  						 <?php } else if ((!$row['Ad']['start_date'] || strtotime($row['Ad']['start_date']) < time()) && (!$row['Ad']['end_date'] || strtotime($row['Ad']['end_date']) > time()))  { ?>
 						 	<span class="label label-success">Active</span>
 						<?php } else if ($row['Ad']['start_date'] && strtotime($row['Ad']['start_date']) > time()) { ?>
 							 	<span class="label label-info">Scheduled</span>
 						<?php } else { ?>
 							 	<span class="label label-warning">Inactive</span>
-						<?php } ?>
-							
-						</td>
- 						
-						 <td>
-		             	<?php if ($row['Ad']['start_date']) echo '<span class="hidden">' . $row['Ad']['start_date'] . '</span>' . ' <strong>Start</strong> ' . $this->App->shortDate($row['Ad']['start_date']); ?>
-		             	<?php if ($row['Ad']['end_date']) echo '<strong>End</strong> ' . $this->App->shortDate($row['Ad']['end_date']); ?>
-		             </td>
+						<?php } ?>	</td>
+ 						 <td><?php 
+						 	if ($row['Ad']['start_date']) echo '<span class="hidden">' . $row['Ad']['start_date'] . '</span>' . $this->App->shortDate($row['Ad']['start_date']);
+		             	if ($row['Ad']['end_date']) echo '-' . $this->App->shortDate($row['Ad']['end_date']); 
+		             ?></td>
 		            
 						
 						<td>
