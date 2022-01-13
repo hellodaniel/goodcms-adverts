@@ -67,9 +67,9 @@ $this->set('options', [
              	<?=$row['AdType']['title']?>
              </td>
             
-            <td><?=$this->App->bigNumber($row['Ad']['hits'])?> </td>
-            <td><?=$this->App->bigNumber($row['Ad']['impressions'])?> </td>
-            <td><?=$this->App->bigNumber($row['Ad']['clicks'])?> </td>
+            <td><?=number_format($row['Ad']['hits'])?> </td>
+            <td><?=number_format($row['Ad']['impressions'])?> </td>
+            <td><?=number_format($row['Ad']['clicks'])?> </td>
             <td class="actions">
                 <div class="btn-group">
             	<?=$this->element('admin/index-actions', array('id' => $row['Ad']['id']))?>
