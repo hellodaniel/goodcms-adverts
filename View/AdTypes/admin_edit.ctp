@@ -32,8 +32,8 @@ if (@$this->data['AdType']['width']) {
    $samples['Desktop@2x'] = [$this->data['AdType']['width'] * 2, $this->data['AdType']['height'] * 2];
 }
 if (@$this->data['AdType']['mobile_width']) {
-   $samples['Mobile'] = [$this->data['AdType']['mobile_height'], $this->data['AdType']['mobile_height']];
-   $samples['Mobile@2x'] = [$this->data['AdType']['mobile_height'] * 2, $this->data['AdType']['mobile_height'] * 2];
+   $samples['Mobile'] = [$this->data['AdType']['mobile_height'], $this->data['AdType']['mobile_width']];
+   $samples['Mobile@2x'] = [$this->data['AdType']['mobile_height'] * 2, $this->data['AdType']['mobile_width'] * 2];
 }
 
 ?>
