@@ -43,7 +43,7 @@ if (@$this->data['AdType']['mobile_width']) {
    <h3>Samples</h3>
    <p>Images can optionally be supplied at double resolution for retina displays (@2x). If you don't supply a mobile size, the desktop size will be used.</p>
    <?php foreach ($samples as $title => $size) { ?>
-      <img src="https://placehold.jp/28/3880B4/ffffff/<?= $size[0] ?>x<?= $size[1] ?>.png?text=<?= $title ?> <?= $size[0] ?>x<?= $size[1] ?>" class="img-responsize img-fluid m-b-15" /><br />
+      <img src="https://placehold.jp/28/3880B4/ffffff/<?= $size[0] ?>x<?= $size[1] ?>.png?text=<?= $title ?> <?= $size[0] ?>x<?= $size[1] ?>" class="img-responsize img-fluid m-b-15" width="<?= strstr($title, '@2x') ? $size[0] / 2 : $size[0] ?>" width="<?= strstr($title, '@2x') ? $size[1] / 2 : $size[1] ?>" /><br />
 
    <?php } ?>
    <hr />
