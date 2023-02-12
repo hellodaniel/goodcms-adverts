@@ -62,7 +62,7 @@ class Ad extends AppModel
 			$ad = [
 				'title' => $type['AdType']['title'],
 				'id' => 0,
-				'image' => 'https://placehold.jp/28/3880B4/ffffff/' . $type['AdType']['width'] * 2 . 'x' . $type['AdType']['height'] * 2 . '.png?text=' . $type['AdType']['title'],
+				'image' => 'https://placehold.jp/28/B6BFE6/ffffff/' . $type['AdType']['width'] * 2 . 'x' . $type['AdType']['height'] * 2 . '.png?text=' . $type['AdType']['title'],
 				'imagemobile' => '',
 				'html' => '',
 				'destination_url' => '',
