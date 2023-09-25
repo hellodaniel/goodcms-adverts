@@ -35,7 +35,7 @@ foreach ($ads as $i => $ad) {
 
 	// Track the ad internally AND via Google Analytics
 	// Internally we use the ID though
-	$tracking = "track(['Ad', 'Click', '{$ad['Ad']['id']}', 1], 2); track(['Ad', 'Click', '" . h($ad['Ad']['title']) . "'], 0); return true;";
+	$tracking = "track(['Ad', 'Click', '{$ad['Ad']['id']}', 1], 2); track(['Ad', 'Click', '" . addslashes($ad['Ad']['title']) . "'], 0); return true;";
 
 	$attribs = 'rel="sponsored" ' .
 		'href="' . $ad['Ad']['destination_url'] . '" ' .
@@ -96,7 +96,7 @@ foreach ($ads as $i => $ad) {
 	<script>
 		setTimeout(function() {
 			jQuery.ajax('/adverts/ads/impression/<?= $ad['Ad']['id'] ?>');
-			track(['Ad', 'Impression', '<?= h($ad['Ad']['title']) ?>'], 0);
+			track(['Ad', 'Impression', '<?= addslashes($ad['Ad']['title']) ?>'], 0);
 		}, 400);
 	</script>
 <?php
