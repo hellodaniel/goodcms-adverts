@@ -3,6 +3,9 @@
 
 $AdModel = ClassRegistry::init('Adverts.Ad');
 
+// You can pass in a list of ads that should be included.. 
+$include = (isset($include) ? $include : []);
+
 if (!isset($count)) $count = 1;
 
 // Fallback to a placeholder ad? (default: false)
@@ -14,7 +17,7 @@ $ads = Cache::read($cache_key, 'short');
 $ads = false;
 // disused for the moment
 if ($ads === false) {
-	$ads = $AdModel->get($type, $count, true, $fallback);
+	$ads = $AdModel->get($type, $count, true, $fallback, $include);
 	Cache::write($cache_key, $ads, 'short');
 }
 

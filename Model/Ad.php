@@ -21,7 +21,7 @@ class Ad extends AppModel
 	];
 
 
-	public function get($type = 1, $count = 1, $random = true, $fallback = false)
+	public function get($type = 1, $count = 1, $random = true, $fallback = false, $include = [])
 	{
 
 		$order = ($random) ? 'RAND()' : 'Ad.weight';
@@ -35,11 +35,26 @@ class Ad extends AppModel
 			$conditions['AdType.title LIKE'] = $type . ' %';
 		}
 
+
 		$conditions['AND'] = [];
 		$conditions['AND'][] = ['OR' => [['Ad.start_date <=' => date('Y-m-d')], ['Ad.start_date' => '']]];
 		$conditions['AND'][] = ['OR' => [['Ad.end_date >=' => date('Y-m-d')], ['Ad.end_date' => '']]];
 
-		$ads = $this->find('all', ['limit' => $count, 'conditions' => $conditions, 'order' => $order]);
+		$ads = [];
+
+		if (!empty($include)) {
+			foreach ($this->find('all', ['conditions' =>  ['Ad.id' => $include] + $conditions, 'order' => $order]) as $ad) {
+				$ads[] = $ad;
+				$count--;
+			}
+		}
+
+		// There's nothing for include... 
+		if ($count > 0) {
+			if (!empty($include))
+				$conditions['Ad.id NOT IN'] = $include;
+			$ads = array_merge($ads, $this->find('all', ['limit' => $count, 'conditions' => $conditions, 'order' => $order]));
+		}
 
 		// foreach ($ads as $ad) {		
 		//	ClassRegistry::init('Analytic')->hit('Ad', 'Impression', $ad['Ad']['title']);
@@ -83,20 +98,24 @@ class Ad extends AppModel
 
 
 
-	public function addTracking($url, $campaign = '')
+	public function addTracking($url, $campaign = [])
 	{
 
 		// Already got one? Fine... 
 		if (strpos($url, 'utm_')) return $url;
 
-		if (!@$options['source']) {
-			$options['source'] = Configure::read('Site.Title');
+		if (is_string($campaign)) {
+			$campaign = ['campaign' => $campaign, 'source' => Configure::read('Site.Title')];
 		}
-		if (!@$options['medium']) {
-			$options['medium'] = 'mrec';
+
+		if (empty($campaign['source'])) {
+			$campaign['source'] = Configure::read('Site.Title');
 		}
-		if (!@$options['campaign']) {
-			$options['campaign'] = date('F') . ' web banner';
+		if (empty($campaign['medium'])) {
+			$campaign['medium'] = 'mrec';
+		}
+		if (empty($campaign['campaign'])) {
+			$campaign['campaign'] = date('F Y') . ' web banner';
 		}
 
 		if (strpos($url, '?') !== false) {
@@ -105,11 +124,11 @@ class Ad extends AppModel
 			$url .= '?';
 		}
 
-		foreach ($options as $key => $val) {
-			$options[$key] = strtolower(Inflector::slug($val, '+'));
+		foreach ($campaign as $key => $val) {
+			$campaign[$key] = strtolower(Inflector::slug($val, '+'));
 		}
 
-		$url .= "utm_source={$options['source']}&utm_medium={$options['medium']}&utm_campaign={$options['campaign']}";
+		$url .= "utm_source={$campaign['source']}&utm_medium={$campaign['medium']}&utm_campaign={$campaign['campaign']}";
 
 		return $url;
 	}
