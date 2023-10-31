@@ -11,15 +11,12 @@ $this->set('options', [
 
 
 ?>
-<?php $this->append('secondary-sidebar'); ?>
 
-<p><strong>Impression:</strong> An ad <em>impression</em> occurs when an ad is displayed to a user. The "impression" event is fired internally via javascript 400ms after the ad has been displayed on the page and is also sent to Google Analytics (if configured). Impressions should not be affected by bots or ad blockers.</p>
 
-<p><strong>Hit:</strong> An ad is <em>hit</em> when it's image content is loaded by a browser. This method does not use javascript but may be subverted by browser cache or ad blockers and may also be triggered by bots.</p>
-
-<div class="alert alert-warning">n.b.: Due to the changes in impression algorithms we reset impresssions at <?= $this->App->shortDate(filemtime('../Plugin/Adverts/sql/02 Reset the numbers.sql')) ?>. If you want to see historic impressions prior to that date please <a href="?historic=true">click here.</a></div>
-
-<?php $this->end(); ?>
+<p>
+	<strong>Impression:</strong> An ad <em>impression</em> occurs when an ad is displayed to a user. The "impression" event is fired internally via javascript 400ms after the ad has been displayed on the page and is also sent to Google Analytics (if configured). Impressions should not be affected by bots or ad blockers.
+	<strong>Hit:</strong> An ad is <em>hit</em> when it's image content is loaded by a browser. This method does not use javascript but may be subverted by browser cache or ad blockers and may also be triggered by bots.
+</p>
 
 <table class="table table-hover index_table">
 	<thead>
@@ -27,6 +24,7 @@ $this->set('options', [
 
 			<th class="filterable">Status</th>
 			<th>Dates</th>
+			<th>Created</th>
 			<th>Biller</th>
 			<th class="filterable">Type</th>
 			<th>Hits</th>
@@ -54,9 +52,10 @@ $this->set('options', [
 					if ($row['Ad']['end_date']) echo '-' . $this->App->shortDate($row['Ad']['end_date']);
 					?>
 				</td>
+				<td><?php if ($row['Ad']['created'] != '0000-00-00 00:00:00') echo '<span class="hidden">' . $row['Ad']['created'] . '</span>' . $this->App->timeAgo($row['Ad']['created']) ?></td>
 				<td>
 					<strong><?php echo $this->Html->link($row['Ad']['title'], array('action' => 'edit', $row['Ad']['id']), array('escape' => false)); ?></strong><br />
-					<?= strip_tags($row['Ad']['destination_url']) ?>
+					<?= $row['Ad']['biller'] ?>
 				</td>
 				<td>
 					<?= $row['AdType']['title'] ?>
@@ -73,3 +72,6 @@ $this->set('options', [
 		<?php } ?>
 	</tbody>
 </table>
+
+
+<div class="alert alert-warning">n.b.: Due to the changes in impression algorithms we reset impresssions at <?= $this->App->shortDate(filemtime('../Plugin/Adverts/sql/02 Reset the numbers.sql')) ?>. If you want to see historic impressions prior to that date please <a href="?historic=true">click here.</a></div>
