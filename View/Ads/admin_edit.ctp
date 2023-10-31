@@ -76,5 +76,6 @@ echo $this->GoodForm->input('Ad.type', array('options' => array('image' => 'Imag
 
 <?= $this->GoodForm->input('Ad.start_date', ['type' => 'date', 'label' => 'Display from', 'hint' => 'Blank for no start date']) ?>
 <?= $this->GoodForm->input('Ad.end_date', ['type' => 'date', 'label' => 'Display until', 'hint' => 'Blank for no end date']) ?>
+<?= $this->GoodForm->input('Ad.urls', ['hint' => 'Add partial URLs for ads to be limited to those pages only']) ?>
 
 <?php $this->end(); ?>

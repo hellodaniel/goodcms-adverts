@@ -4,21 +4,25 @@
 $AdModel = ClassRegistry::init('Adverts.Ad');
 
 // You can pass in a list of ads that should be included.. 
-$include = (isset($include) ? $include : []);
+if (!isset($url))
+	$url = $this->here;
+
+// The homepage will match any url combo because it's just a slash
+if ($url == '/') $url = '';
 
 if (!isset($count)) $count = 1;
 
 // Fallback to a placeholder ad? (default: false)
 if (!isset($fallback)) $fallback = Configure::read('debug');
 
-$cache_key = 'ad-' . $type . '-' . $count . Inflector::slug($this->here, '');
+$cache_key = 'ad-' . $type . '-' . $count . 'x' . Inflector::slug($url, '');
 
-$ads = Cache::read($cache_key, 'short');
+$ads = Cache::read($cache_key);
 $ads = false;
 // disused for the moment
 if ($ads === false) {
-	$ads = $AdModel->get($type, $count, true, $fallback, $include);
-	Cache::write($cache_key, $ads, 'short');
+	$ads = $AdModel->get($type, $count, true, $fallback, $url);
+	Cache::write($cache_key, $ads);
 }
 
 

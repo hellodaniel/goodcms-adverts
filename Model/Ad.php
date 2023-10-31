@@ -21,7 +21,7 @@ class Ad extends AppModel
 	];
 
 
-	public function get($type = 1, $count = 1, $random = true, $fallback = false, $include = [])
+	public function get($type = 1, $count = 1, $random = true, $fallback = false, $url = null)
 	{
 
 		$order = ($random) ? 'RAND()' : 'Ad.weight';
@@ -42,25 +42,32 @@ class Ad extends AppModel
 
 		$ads = [];
 
-		if (!empty($include)) {
-			foreach ($this->find('all', ['conditions' =>  ['Ad.id' => $include] + $conditions, 'order' => $order]) as $ad) {
-				$ads[] = $ad;
-				$count--;
+		// Only if our model has this field
+		if ($this->hasField('urls')) {
+
+			if (!empty($url)) {
+				// If we've been told to get one based on the URL then get one that ONLY matches
+				$ads = $this->find('all', ['limit' => $count, 'conditions' =>  ['Ad.urls LIKE' => '%' . $url . '%'] + $conditions, 'order' => $order]);
+
+				if (!empty($ads)) $count -= count($ads);
 			}
+
+			// Don't get ads that HAVE URLS specified
+			$conditions['AND'][] = ['OR' => [['Ad.urls' => null], ['Ad.urls' => '']]];
 		}
 
-		// There's nothing for include... 
-		if ($count > 0) {
-			if (!empty($include))
-				$conditions['Ad.id NOT IN'] = $include;
-			$ads = array_merge($ads, $this->find('all', ['limit' => $count, 'conditions' => $conditions, 'order' => $order]));
-		}
+
+
+
+		// Get the ads
+		$ads = array_merge($ads, $this->find('all', ['limit' => $count, 'conditions' => $conditions, 'order' => $order]));
 
 		// foreach ($ads as $ad) {		
 		//	ClassRegistry::init('Analytic')->hit('Ad', 'Impression', $ad['Ad']['title']);
 		// }
 
-		if (empty($ads) && $fallback) {
+		if (count($ads) < $count && $fallback) {
+
 			$conditions = [];
 
 			if (is_numeric($type)) {
@@ -72,7 +79,7 @@ class Ad extends AppModel
 			$type = $this->AdType->find('first', ['conditions' => $conditions]);
 
 			if (empty($type)) return;
-			$ads = [];
+
 
 			$ad = [
 				'title' => $type['AdType']['title'],

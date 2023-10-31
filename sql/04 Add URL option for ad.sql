@@ -1,0 +1,1 @@
+ALTER TABLE `ads` ADD `urls` TEXT NULL DEFAULT NULL AFTER `clicks`; 
