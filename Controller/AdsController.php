@@ -96,8 +96,8 @@ class AdsController extends AppController
 		$ad = $this->Ad->findById($id);
 
 		if (!empty($ad)) {
-
-			$this->Analytic->hit('Ad', 'Click', $ad['Ad']['id']);
+			if (!$this->request->is('bot'))
+				$this->Analytic->hit('Ad', 'Click', $ad['Ad']['id']);
 			$ad['Ad']['destination_url'] = $this->Ad->addTracking($ad['Ad']['destination_url']);
 			return $this->redirect($ad['Ad']['destination_url']);
 		} else {
@@ -107,6 +107,9 @@ class AdsController extends AppController
 
 	public function impression($id)
 	{
+
+		// Don't track if this is a bot
+		if ($this->request->is('bot')) die('🤖');
 
 		$this->autoRender = false;
 
@@ -129,6 +132,7 @@ class AdsController extends AppController
 			['Ad.id' => $id],
 			['callbacks' => false]
 		);
+
 
 		exit();
 	}
