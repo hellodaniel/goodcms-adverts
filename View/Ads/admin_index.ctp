@@ -30,6 +30,7 @@ $this->set('options', [
 			<th>Hits</th>
 			<th>Impressions</th>
 			<th>Clicks</th>
+			<th>Restrictions</th>
 			<th></th>
 
 		</tr>
@@ -63,6 +64,12 @@ $this->set('options', [
 				<td><?= number_format($row['Ad']['hits']) ?> </td>
 				<td><?= number_format($row['Ad']['impressions']) ?> </td>
 				<td><?= number_format($row['Ad']['clicks']) ?> </td>
+				<td><?php
+
+					if ($row['Ad']['whitelist_urls']) echo '<label class="badge badge-default">Whitelist</label>';
+					if ($row['Ad']['blacklist_urls']) echo '<label class="badge badge-dark">Blacklist</label>';
+
+					?></td>
 				<td class="actions">
 					<div class="btn-group">
 						<?= $this->element('admin/index-actions', array('id' => $row['Ad']['id'])) ?>

@@ -43,18 +43,32 @@ class Ad extends AppModel
 		$ads = [];
 
 		// Only if our model has this field
-		if ($this->hasField('urls')) {
+		if ($this->hasField('whitelist_urls') && !empty($url)) {
 
-			if (!empty($url)) {
-				// If we've been told to get one based on the URL then get one that ONLY matches
-				$ads = $this->find('all', ['limit' => $count, 'conditions' =>  ['Ad.urls LIKE' => '%' . $url . '%'] + $conditions, 'order' => $order]);
-
-				if (!empty($ads)) $count -= count($ads);
-			}
-
-			// Don't get ads that HAVE URLS specified
-			$conditions['AND'][] = ['OR' => [['Ad.urls' => null], ['Ad.urls' => '']]];
+			$whitelist = [
+				['Ad.whitelist_urls' => null],
+				['Ad.whitelist_urls' => ''],
+				['Ad.whitelist_urls LIKE' => '%' . $url . '%'],
+			];
+			$conditions['AND'][] = [
+				'OR' => $whitelist
+			];
 		}
+
+		// Only if our model has this field
+		if ($this->hasField('blacklist_urls') && !empty($url)) {
+
+			$blacklist = [
+				['Ad.blacklist_urls' => null],
+				['Ad.blacklist_urls' => ''],
+				['Ad.blacklist_urls NOT LIKE' => '%' . $url . '%']
+			];
+
+			$conditions['AND'][] = [
+				'OR' => $blacklist
+			];
+		}
+
 
 
 
