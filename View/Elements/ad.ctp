@@ -43,7 +43,7 @@ foreach ($ads as $i => $ad) {
 	$classes = 'hidden-print ad adtype-' . $ad['AdType']['id'] . ' adtype-' . $this->App->slug($ad['AdType']['title']);
 	if (!empty($class)) $classes .= ' ' . $class;
 
-	if ($ad['Ad']['type'] == 'video' || $ad['Ad']['type'] == 'image') {
+	if (empty($ad['Ad']['type']) || $ad['Ad']['type'] == 'video' || $ad['Ad']['type'] == 'image') {
 
 		// Track the ad internally AND via Google Analytics
 		// Internally we use the ID though
@@ -70,18 +70,36 @@ foreach ($ads as $i => $ad) {
 		}
 
 
-		if ($ad['Ad']['type'] == 'video') { ?>
+		if (!empty($ad['Ad']['type']) && $ad['Ad']['type'] == 'video') { ?>
 
-			<a class="<?= $classes ?>" <?= $attribs ?>>
-				<video autoplay muted loop playinline>
-					<source src="<?= $ad['Ad']['video'] ?>" type="video/<?= strtolower(pathinfo($ad['Ad']['video'], PATHINFO_EXTENSION)) ?>">
-				</video>
-			</a>
+			<?php if ($ad['Ad']['video'] && $ad['Ad']['videomobile']) { ?>
 
-			<?php }
+				<a class="<?= $classes ?> hidden-sm hidden-xs" <?= $attribs ?>>
+					<video autoplay muted loop playinline>
+						<source src="<?= $ad['Ad']['video'] ?>" type="video/<?= strtolower(pathinfo($ad['Ad']['video'], PATHINFO_EXTENSION)) ?>">
+					</video>
+				</a>
+
+				<a class="<?= $classes ?> hidden-md hidden-lg" <?= $attribs ?>>
+					<video autoplay muted loop playinline>
+						<source src="<?= $ad['Ad']['videomobile'] ?>" type="video/<?= strtolower(pathinfo($ad['Ad']['videomobile'], PATHINFO_EXTENSION)) ?>">
+					</video>
+				</a>
+
+			<?php } else { ?>
+
+				<a class="<?= $classes ?>" <?= $attribs ?>>
+					<video autoplay muted loop playinline>
+						<source src="<?= $ad['Ad']['video'] ?: $ad['Ad']['videomobile'] ?>" type="video/<?= strtolower(pathinfo(($ad['Ad']['video'] ?: $ad['Ad']['videomobile']), PATHINFO_EXTENSION)) ?>">
+					</video>
+				</a>
+
+			<?php } ?>
+
+		<?php } ?>
 
 
-		if ($ad['Ad']['type'] == 'image') {
+		<?php if (empty($ad['Ad']['type']) || $ad['Ad']['type'] == 'image') {
 
 			if ($ad['Ad']['imagemobile'] && $ad['Ad']['image']) { ?>
 

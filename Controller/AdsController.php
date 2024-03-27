@@ -190,6 +190,8 @@ class AdsController extends AppController
 		}
 
 		$this->set('adTypes', $this->Ad->AdType->find('list'));
+		$this->set('types', $this->Ad->AdType->find('all', ['recursive' => -1]));
+
 		parent::admin_edit($id);
 	}
 

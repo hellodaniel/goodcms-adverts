@@ -41,6 +41,28 @@ echo $this->GoodForm->input('Ad.type', array('options' => array(
 ?>
 
 <div class="well">
+
+
+	<?php foreach ($types as $row) { ?>
+		<div class="row" data-visibility-control="#AdAdTypeId==<?= $row['AdType']['id'] ?>">
+			<div class="col-md-6">
+				<h5><?= $row['AdType']['title'] ?></h5>
+				<samp><?= $row['AdType']['width'] ?>&times;<?= $row['AdType']['height'] ?></samp> or
+				<samp class="text-muted"><?= $row['AdType']['width'] * 2 ?>&times;<?= $row['AdType']['height'] * 2 ?>@2x</samp>
+			</div>
+			<div class="col-md-6">
+
+				<?php if (!$row['AdType']['mobile_width']) { ?>
+
+				<?php } else { ?>
+					<h5>Mobile</h5>
+					<samp><?= $row['AdType']['mobile_width'] ?>&times;<?= $row['AdType']['mobile_height'] ?></samp> or
+					<samp class="text-muted"><?= $row['AdType']['mobile_width'] * 2 ?>&times;<?= $row['AdType']['mobile_height'] * 2 ?>@2x</samp>
+				<?php } ?>
+			</div>
+		</div>
+	<?php } ?>
+
 	<div class="row" data-visibility-control="#AdType==image">
 		<div class="col-md-6">
 
@@ -72,31 +94,55 @@ echo $this->GoodForm->input('Ad.type', array('options' => array(
 
 	</div>
 	<div data-visibility-control="#AdType==video">
-		<div class="callout">
-			Videos must be in MP4 or WEPM format.
+		<div class="row">
+			<div class="col-md-6">
+
+				<h4><?= $this->App->icon('computer') ?> Desktop video</h4>
+				<?php
+				if (!empty($this->data['Ad']['video'])) {
+					$filesize  = round($this->App->filesize($this->data['Ad']['video']) / 1000000, 1);
+					if ($filesize > 2) {
+						echo '<div class="alert alert-' . ($filesize > 10 ? 'danger' : 'warning') . '">Video file size is ' . $filesize . 'mb - this is ' . ($filesize > 10 ? 'too' : 'quite') . ' large and may affect page load times.</div>';
+					}
+				}
+				?>
+				<?= $this->GoodForm->input('Ad.video', array('type' => 'file')) ?>
+
+			</div>
+			<div class="col-md-6">
+
+				<h4><?= $this->App->icon('mobile') ?> Mobile video</h4>
+				<?php
+				if (!empty($this->data['Ad']['videomobile'])) {
+					$filesize  = round($this->App->filesize($this->data['Ad']['videomobile']) / 1000000, 1);
+					if ($filesize > 2) {
+						echo '<div class="alert alert-' . ($filesize > 10 ? 'danger' : 'warning') . '">Video file size is ' . $filesize . 'mb - this is  ' . $filesize . 'mb - this is ' . ($filesize > 10 ? 'too' : 'quite') . ' large and may affect page load times.</div>';
+					}
+				}
+				?>
+				<?= $this->GoodForm->input('Ad.videomobile', array('type' => 'file')) ?>
+			</div>
 		</div>
 
-		<?php
-		if (!empty($this->data['Ad']['video'])) {
-			$filesize  = round($this->App->filesize($this->data['Ad']['video']) / 1000000, 1);
-			if ($filesize > 2) {
-				echo '<div class="alert alert-' . ($filesize > 10 ? 'danger' : 'warning') . '">Video file size is ' . $filesize . 'mb - this is ' . ($filesize > 10 ? 'too' : 'quite') . ' large and may affect page load times.</div>';
-			}
-		}
-		?>
-		<?= $this->GoodForm->input('Ad.video', array('type' => 'file')) ?>
-
+		<div class="callout">
+			<?= $this->App->icon('triangle-exclamation') ?> Videos must be in MP4 or WEPM format.
+		</div>
 	</div>
 
 	<div data-visibility-control="#AdType==html">
+
+		<?= $this->GoodForm->input('Ad.html', ['type' => 'code']) ?>
+
 		<div class="callout">
 			HTML ads do not currently include any tracking or click-through functionality. They are displayed as-is and are not recommended for use with external advertisers.
 		</div>
-		<?= $this->GoodForm->input('Ad.html', ['type' => 'code']) ?>
 	</div>
+
+
+
 </div>
 
-<div class="well">
+<div class="callout callout-warning">
 	<h4>Restrictions</h4>
 	<p>Add urls to whitelist or blacklist them</p>
 	<div class="row">
