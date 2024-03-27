@@ -75,13 +75,13 @@ foreach ($ads as $i => $ad) {
 			<?php if ($ad['Ad']['video'] && $ad['Ad']['videomobile']) { ?>
 
 				<a class="<?= $classes ?> hidden-sm hidden-xs" <?= $attribs ?>>
-					<video autoplay muted loop playinline>
+					<video autoplay muted loop playinline style="max-width: 100%; margin-left: auto; margin-right: auto; ">
 						<source src="<?= $ad['Ad']['video'] ?>" type="video/<?= strtolower(pathinfo($ad['Ad']['video'], PATHINFO_EXTENSION)) ?>">
 					</video>
 				</a>
 
 				<a class="<?= $classes ?> hidden-md hidden-lg" <?= $attribs ?>>
-					<video autoplay muted loop playinline>
+					<video autoplay muted loop playinline style="max-width: 100%; margin-left: auto; margin-right: auto; ">
 						<source src="<?= $ad['Ad']['videomobile'] ?>" type="video/<?= strtolower(pathinfo($ad['Ad']['videomobile'], PATHINFO_EXTENSION)) ?>">
 					</video>
 				</a>
