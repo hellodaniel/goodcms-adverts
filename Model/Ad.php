@@ -16,6 +16,14 @@ class Ad extends AppModel
 			'imagemobile' => [
 				'uploadDir' => 'files/uploads/ads/',
 				'finalPath' => '/files/uploads/ads/'
+			],
+			'video' => [
+				'uploadDir' => 'files/uploads/ads/',
+				'finalPath' => '/files/uploads/ads/'
+			],
+			'videomobile' => [
+				'uploadDir' => 'files/uploads/ads/',
+				'finalPath' => '/files/uploads/ads/'
 			]
 		]
 	];

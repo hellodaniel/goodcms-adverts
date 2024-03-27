@@ -32,7 +32,11 @@ echo $this->GoodForm->input('Ad.title', ['class' => 'input-lg']);
 
 echo $this->GoodForm->input('Ad.destination_url', ['hint' => 'Include http(s):// for all external links']);
 
-echo $this->GoodForm->input('Ad.type', array('options' => array('image' => 'Image', 'html' => 'HTML',)));
+echo $this->GoodForm->input('Ad.type', array('options' => array(
+	'image' => 'Image',
+	'video' => 'Video',
+	'html' => 'HTML',
+)));
 
 ?>
 
@@ -67,8 +71,27 @@ echo $this->GoodForm->input('Ad.type', array('options' => array('image' => 'Imag
 		</div>
 
 	</div>
+	<div data-visibility-control="#AdType==video">
+		<div class="callout">
+			Videos must be in MP4 or WEPM format.
+		</div>
+
+		<?php
+		if (!empty($this->data['Ad']['video'])) {
+			$filesize  = round($this->App->filesize($this->data['Ad']['video']) / 1000000, 1);
+			if ($filesize > 2) {
+				echo '<div class="alert alert-' . ($filesize > 10 ? 'danger' : 'warning') . '">Video file size is ' . $filesize . 'mb - this is ' . ($filesize > 10 ? 'too' : 'quite') . ' large and may affect page load times.</div>';
+			}
+		}
+		?>
+		<?= $this->GoodForm->input('Ad.video', array('type' => 'file')) ?>
+
+	</div>
 
 	<div data-visibility-control="#AdType==html">
+		<div class="callout">
+			HTML ads do not currently include any tracking or click-through functionality. They are displayed as-is and are not recommended for use with external advertisers.
+		</div>
 		<?= $this->GoodForm->input('Ad.html', ['type' => 'code']) ?>
 	</div>
 </div>

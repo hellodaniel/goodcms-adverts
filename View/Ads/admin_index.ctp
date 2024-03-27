@@ -27,6 +27,7 @@ $this->set('options', [
 			<th>Created</th>
 			<th>Biller</th>
 			<th class="filterable">Type</th>
+			<th class="filterable">Format</th>
 			<th>Hits</th>
 			<th>Impressions</th>
 			<th>Clicks</th>
@@ -60,6 +61,9 @@ $this->set('options', [
 				</td>
 				<td>
 					<?= $row['AdType']['title'] ?>
+				</td>
+				<td>
+					<?= $row['Ad']['type'] ?>
 				</td>
 				<td><?= number_format($row['Ad']['hits']) ?> </td>
 				<td><?= number_format($row['Ad']['impressions']) ?> </td>

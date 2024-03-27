@@ -40,64 +40,73 @@ foreach ($ads as $i => $ad) {
 
 	$ids[$ad['Ad']['id']] = $ad['Ad']['title'];
 
-	// Track the ad internally AND via Google Analytics
-	// Internally we use the ID though
-	$tracking = "track(['Ad', 'Click', '{$ad['Ad']['id']}', 1], 2); track(['Ad', 'Click', '" . addslashes($ad['Ad']['title']) . "'], 0); return true;";
-
-	$attribs = 'rel="sponsored" ' .
-		'href="' . $ad['Ad']['destination_url'] . '" ' .
-		'onclick="' . $tracking . '" ' .
-		'target="_blank"';
-
-
 	$classes = 'hidden-print ad adtype-' . $ad['AdType']['id'] . ' adtype-' . $this->App->slug($ad['AdType']['title']);
-
 	if (!empty($class)) $classes .= ' ' . $class;
 
-	$image_attribs = [
-		'class' => 'img-responsive center-block',
-		'alt' => $ad['Ad']['title'],
-		'style' => 'max-width: 100%;',
-		'loading' => 'lazy'
-	];
+	if ($ad['Ad']['type'] == 'video' || $ad['Ad']['type'] == 'image') {
+
+		// Track the ad internally AND via Google Analytics
+		// Internally we use the ID though
+		$tracking = "track(['Ad', 'Click', '{$ad['Ad']['id']}', 1], 2); track(['Ad', 'Click', '" . addslashes($ad['Ad']['title']) . "'], 0); return true;";
+
+		$attribs = 'rel="sponsored" ' .
+			'href="' . $ad['Ad']['destination_url'] . '" ' .
+			'onclick="' . $tracking . '" ' .
+			'target="_blank"';
 
 
-	$find = '/<img(.*?)src="(.*?)((?i)\.gif|\.png|\.jpg|\.jpeg)"/';
-	$replace = '<img$1src="/adverts/ads/display/' . $ad['Ad']['id'] . '$3?src=$2$3&time=' . time() . '"';
+		$image_attribs = [
+			'class' => 'img-responsive center-block',
+			'alt' => $ad['Ad']['title'],
+			'style' => 'max-width: 100%;',
+			'loading' => 'lazy'
+		];
+
+		$find = '/<img(.*?)src="(.*?)((?i)\.gif|\.png|\.jpg|\.jpeg)"/';
+		$replace = '<img$1src="/adverts/ads/display/' . $ad['Ad']['id'] . '$3?src=$2$3&time=' . time() . '"';
+
+		if ($ad['Ad']['imagemobile']) {
+			$mobile_attribs = $image_attribs;
+		}
 
 
+		if ($ad['Ad']['type'] == 'video') { ?>
 
-	if ($ad['Ad']['imagemobile']) {
-		$mobile_attribs = $image_attribs;
-	}
+			<a class="<?= $classes ?>" <?= $attribs ?>>
+				<video autoplay muted loop playinline>
+					<source src="<?= $ad['Ad']['video'] ?>" type="video/<?= strtolower(pathinfo($ad['Ad']['video'], PATHINFO_EXTENSION)) ?>">
+				</video>
+			</a>
 
-	if ($ad['Ad']['html']) { ?>
+			<?php }
 
-		<div class="<?= $classes ?> hidden-sm hidden-xs">
+
+		if ($ad['Ad']['type'] == 'image') {
+
+			if ($ad['Ad']['imagemobile'] && $ad['Ad']['image']) { ?>
+
+				<a class="<?= $classes ?> hidden-sm hidden-xs" <?= $attribs ?>>
+					<?= preg_replace($find, $replace, $this->App->image($ad['Ad']['image'], $image_attribs)) ?>
+				</a>
+
+				<a class="<?= $classes ?> hidden-md hidden-lg" <?= $attribs ?>>
+					<?= preg_replace($find, $replace, $this->App->image($ad['Ad']['imagemobile'], $mobile_attribs)) ?>
+				</a>
+
+			<?php } else { ?>
+
+				<a class="<?= $classes ?>" <?= $attribs ?>>
+					<?= preg_replace($find, $replace, $this->App->image($ad['Ad']['image'] ?: $ad['Ad']['imagemobile'], $image_attribs)) ?>
+				</a>
+
+		<?php }
+		} ?>
+
+	<?php } else if ($ad['Ad']['type'] == 'html') { ?>
+
+		<div class="<?= $classes ?>">
 			<?= $ad['Ad']['html'] ?>
 		</div>
-
-		<?php if ($ad['Ad']['imagemobile']) { ?>
-			<a class="<?= $classes ?> hidden-md hidden-lg" <?= $attribs ?>>
-				<?= preg_replace($find, $replace, $this->App->image($ad['Ad']['imagemobile'], $mobile_attribs)) ?>
-			</a>
-		<?php } ?>
-
-	<?php } else if ($ad['Ad']['imagemobile']) { ?>
-
-		<a class="<?= $classes ?> hidden-sm hidden-xs" <?= $attribs ?>>
-			<?= preg_replace($find, $replace, $this->App->image($ad['Ad']['image'], $image_attribs)) ?>
-		</a>
-
-		<a class="<?= $classes ?> hidden-md hidden-lg" <?= $attribs ?>>
-			<?= preg_replace($find, $replace, $this->App->image($ad['Ad']['imagemobile'], $mobile_attribs)) ?>
-		</a>
-
-	<?php } else { ?>
-
-		<a class="<?= $classes ?>" <?= $attribs ?>>
-			<?= preg_replace($find, $replace, $this->App->image($ad['Ad']['image'], $image_attribs)) ?>
-		</a>
 
 	<?php } ?>
 	<script>
