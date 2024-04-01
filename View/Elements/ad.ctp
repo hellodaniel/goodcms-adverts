@@ -52,17 +52,21 @@ foreach ($ads as $i => $ad) {
 		$attribs = 'rel="sponsored" ' .
 			'href="' . $ad['Ad']['destination_url'] . '" ' .
 			'onclick="' . $tracking . '" ' .
-			'target="_blank"';
+			'target="_blank" ' .
+			'title="' . addslashes($ad['Ad']['title']) . '" ' .
+			'stlye="display: inline-block; max-width: 100%; margin-left: auto; margin-right: auto;"';
 
 
 		$image_attribs = [
-			'class' => 'img-responsive center-block',
+			'class' => 'img-responsive img-fluid',
 			'alt' => $ad['Ad']['title'],
-			'style' => 'max-width: 100%;',
 			'loading' => 'lazy'
 		];
 
 		$find = '/<img(.*?)src="(.*?)((?i)\.gif|\.png|\.jpg|\.jpeg)"/';
+
+		// Why do we put the time on here? Well it's jus tto trigger a track, really... 
+		// I don't love the idea... 
 		$replace = '<img$1src="/adverts/ads/display/' . $ad['Ad']['id'] . '$3?src=$2$3&time=' . time() . '"';
 
 		if ($ad['Ad']['imagemobile']) {
@@ -70,18 +74,19 @@ foreach ($ads as $i => $ad) {
 		}
 
 
+
 		if (!empty($ad['Ad']['type']) && $ad['Ad']['type'] == 'video') { ?>
 
 			<?php if ($ad['Ad']['video'] && $ad['Ad']['videomobile']) { ?>
 
 				<a class="<?= $classes ?> hidden-sm hidden-xs" <?= $attribs ?>>
-					<video autoplay muted loop playinline style="max-width: 100%; margin-left: auto; margin-right: auto;">
+					<video autoplay muted loop playinline style="<?= $inlinestyle ?>">
 						<source src="<?= $ad['Ad']['video'] ?>" type="video/<?= strtolower(pathinfo($ad['Ad']['video'], PATHINFO_EXTENSION)) ?>">
 					</video>
 				</a>
 
 				<a class="<?= $classes ?> hidden-md hidden-lg" <?= $attribs ?>>
-					<video autoplay muted loop playinline style="max-width: 100%; margin-left: auto; margin-right: auto;">
+					<video autoplay muted loop playinline style="<?= $inlinestyle ?>">
 						<source src="<?= $ad['Ad']['videomobile'] ?>" type="video/<?= strtolower(pathinfo($ad['Ad']['videomobile'], PATHINFO_EXTENSION)) ?>">
 					</video>
 				</a>
@@ -89,7 +94,7 @@ foreach ($ads as $i => $ad) {
 			<?php } else { ?>
 
 				<a class="<?= $classes ?>" <?= $attribs ?>>
-					<video autoplay muted loop playinline style="max-width: 100%; margin-left: auto; margin-right: auto;">
+					<video autoplay muted loop playinline style="<?= $inlinestyle ?>">
 						<source src="<?= $ad['Ad']['video'] ?: $ad['Ad']['videomobile'] ?>" type="video/<?= strtolower(pathinfo(($ad['Ad']['video'] ?: $ad['Ad']['videomobile']), PATHINFO_EXTENSION)) ?>">
 					</video>
 				</a>
