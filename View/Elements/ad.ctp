@@ -49,18 +49,20 @@ foreach ($ads as $i => $ad) {
 		// Internally we use the ID though
 		$tracking = "track(['Ad', 'Click', '{$ad['Ad']['id']}', 1], 2); track(['Ad', 'Click', '" . addslashes($ad['Ad']['title']) . "'], 0); return true;";
 
+		// Applied to the link for video and image ads
 		$attribs = 'rel="sponsored" ' .
 			'href="' . $ad['Ad']['destination_url'] . '" ' .
 			'onclick="' . $tracking . '" ' .
 			'target="_blank" ' .
-			'title="' . addslashes($ad['Ad']['title']) . '" ' .
-			'stlye="display: inline-block; max-width: 100%; margin-left: auto; margin-right: auto;"';
+			'title="' . addslashes($ad['Ad']['title']) . '"';
 
+		$inlinestyle = 'display: block; margin-left: auto; margin-right: auto; max-width: 100%;';
 
 		$image_attribs = [
 			'class' => 'img-responsive img-fluid',
 			'alt' => $ad['Ad']['title'],
-			'loading' => 'lazy'
+			'loading' => 'lazy',
+			'style' => $inlinestyle,
 		];
 
 		$find = '/<img(.*?)src="(.*?)((?i)\.gif|\.png|\.jpg|\.jpeg)"/';
