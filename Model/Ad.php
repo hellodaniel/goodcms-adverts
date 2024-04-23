@@ -50,9 +50,10 @@ class Ad extends AppModel
 
 		$ads = [];
 
+		if ($url == '/') $url = '/home';
+
 		// Only if our model has this field
 		if ($this->hasField('whitelist_urls') && !empty($url)) {
-
 			$whitelist = [
 				['Ad.whitelist_urls' => null],
 				['Ad.whitelist_urls' => ''],

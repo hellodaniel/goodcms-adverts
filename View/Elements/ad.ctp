@@ -7,9 +7,6 @@ $AdModel = ClassRegistry::init('Adverts.Ad');
 if (!isset($url))
 	$url = $this->here;
 
-// The homepage will match any url combo because it's just a slash
-if ($url == '/') $url = '';
-
 if (!isset($count)) $count = 1;
 
 // Fallback to a placeholder ad? (default: false)

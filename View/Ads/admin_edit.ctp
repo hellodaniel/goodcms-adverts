@@ -143,18 +143,16 @@ echo $this->GoodForm->input('Ad.type', array('options' => array(
 </div>
 
 <div class="callout callout-warning">
-	<h4>Restrictions</h4>
-	<p>Add urls to whitelist or blacklist them</p>
+	<h4 class="callout-title">Restrictions</h4>
 	<div class="row">
 		<div class="col-md-6">
 			<?= $this->GoodForm->input('Ad.whitelist_urls', ['hint' => 'Whitelisted URLs', 'type' => 'code']) ?>
-
 		</div>
 		<div class="col-md-6">
 			<?= $this->GoodForm->input('Ad.blacklist_urls', ['hint' => 'Blacklisted URLs', 'type' => 'code']) ?>
-
 		</div>
 	</div>
+	💡 Please use <samp>/home</samp> to represent the homepage in the above restrictions
 </div>
 
 
