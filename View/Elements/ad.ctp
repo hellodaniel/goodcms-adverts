@@ -78,13 +78,13 @@ foreach ($ads as $i => $ad) {
 
 			<?php if ($ad['Ad']['video'] && $ad['Ad']['videomobile']) { ?>
 
-				<a class="<?= $classes ?> hidden-sm hidden-xs" <?= $attribs ?>>
+				<a class="<?= $classes ?> hidden-sm hidden-xs d-none d-md-block" <?= $attribs ?>>
 					<video autoplay muted loop playinline style="<?= $inlinestyle ?>">
 						<source src="<?= $ad['Ad']['video'] ?>" type="video/<?= strtolower(pathinfo($ad['Ad']['video'], PATHINFO_EXTENSION)) ?>">
 					</video>
 				</a>
 
-				<a class="<?= $classes ?> hidden-md hidden-lg" <?= $attribs ?>>
+				<a class="<?= $classes ?> hidden-md hidden-lg d-md-none" <?= $attribs ?>>
 					<video autoplay muted loop playinline style="<?= $inlinestyle ?>">
 						<source src="<?= $ad['Ad']['videomobile'] ?>" type="video/<?= strtolower(pathinfo($ad['Ad']['videomobile'], PATHINFO_EXTENSION)) ?>">
 					</video>
@@ -107,11 +107,11 @@ foreach ($ads as $i => $ad) {
 
 			if ($ad['Ad']['imagemobile'] && $ad['Ad']['image']) { ?>
 
-				<a class="<?= $classes ?> hidden-sm hidden-xs" <?= $attribs ?>>
+				<a class="<?= $classes ?> hidden-sm hidden-xs d-none d-md-block" <?= $attribs ?>>
 					<?= preg_replace($find, $replace, $this->App->image($ad['Ad']['image'], $image_attribs)) ?>
 				</a>
 
-				<a class="<?= $classes ?> hidden-md hidden-lg" <?= $attribs ?>>
+				<a class="<?= $classes ?> hidden-md hidden-lg d-md-none" <?= $attribs ?>>
 					<?= preg_replace($find, $replace, $this->App->image($ad['Ad']['imagemobile'], $mobile_attribs)) ?>
 				</a>
 
