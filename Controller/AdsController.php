@@ -14,18 +14,6 @@ class AdsController extends AppController
 	public $components = ['Export'];
 
 
-	function beforeFilter()
-	{
-
-		// Don't bother with any site loading or checking when running an impression
-		if ($this->action == 'impression' || $this->action == 'display') {
-			$this->Components->unload('Auth');
-			$this->Components->unload('DebugKit.Toolbar');
-			return;
-		}
-		parent::beforeFilter();
-	}
-
 
 	public function display($id)
 	{
@@ -79,11 +67,7 @@ class AdsController extends AppController
 		$this->response->send();
 
 		// Push a hit
-		$this->Ad->unbindModel(['belongsTo' => ['AdType']]);
-		$this->Ad->updateAll(
-			['Ad.hits' => 'Ad.hits + 1'],
-			['Ad.id' => $id]
-		);
+		$this->Ad->impression($id);
 
 		exit();
 	}
@@ -96,7 +80,7 @@ class AdsController extends AppController
 		$ad = $this->Ad->findById($id);
 
 		if (!empty($ad)) {
-			if (!$this->request->is('bot'))
+			if (!$this->Analytic->isBot())
 				$this->Analytic->hit('Ad', 'Click', $ad['Ad']['id']);
 			$ad['Ad']['destination_url'] = $this->Ad->addTracking($ad['Ad']['destination_url']);
 			return $this->redirect($ad['Ad']['destination_url']);
@@ -107,9 +91,14 @@ class AdsController extends AppController
 
 	public function impression($id)
 	{
-
 		// Don't track if this is a bot
-		if ($this->request->is('bot')) die('🤖');
+		if ($this->Analytic->isBot())
+			die('🤖');
+
+		if (CakeSession::read('Auth.User.role') && in_array(CakeSession::read('Auth.User.role'), ['dev', 'admin']))
+			die('👨‍💻');
+
+		$this->Ad->impression($id);
 
 		$this->autoRender = false;
 
@@ -123,16 +112,6 @@ class AdsController extends AppController
 		$this->response->body($body);
 		$this->response->type('text');
 		$this->response->send();
-
-		// Now do the DB things
-		$this->Analytic->hit('Ad', 'Impression', $id);
-		$this->Ad->unbindModel(['belongsTo' => ['AdType']]);
-		$this->Ad->updateAll(
-			['Ad.impressions' => 'Ad.impressions + 1'],
-			['Ad.id' => $id],
-			['callbacks' => false]
-		);
-
 
 		exit();
 	}

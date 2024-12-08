@@ -126,6 +126,21 @@ class Ad extends AppModel
 		return $ads;
 	}
 
+	public function impression($id)
+	{
+
+		$this->updateAll(
+			['Ad.hits' => 'Ad.hits + 1'],
+			['Ad.id' => $id]
+		);
+
+
+		// Now do the DB things
+
+		ClassRegistry::init('Analytic')->hit('Ad', 'Impression', $id);
+
+		return true;
+	}
 
 
 	public function addTracking($url, $campaign = [])
