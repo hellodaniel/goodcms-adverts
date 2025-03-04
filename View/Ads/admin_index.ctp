@@ -21,7 +21,6 @@ $this->set('options', [
 <table class="table table-hover index_table">
 	<thead>
 		<tr>
-
 			<th class="filterable">Status</th>
 			<th>Dates</th>
 			<th>Created</th>
@@ -32,8 +31,7 @@ $this->set('options', [
 			<th>Impressions</th>
 			<th>Clicks</th>
 			<th>Restrictions</th>
-			<th></th>
-
+			<th class="no-export"></th>
 		</tr>
 	</thead>
 	<tbody>
