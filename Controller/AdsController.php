@@ -20,10 +20,10 @@ class AdsController extends AppController
 
 		$this->autoRender = false;
 
-
 		$src = $_GET['src'];
 		$ext = pathinfo($id)['extension'];
 		$id = str_replace('.' . $ext, '', $id);
+
 
 		// Memory cache is going to be faster
 		$content = Cache::read('ad-' . md5($src));
@@ -65,9 +65,6 @@ class AdsController extends AppController
 		$this->response->compress($content);
 
 		$this->response->send();
-
-		// Push a hit
-		$this->Ad->impression($id);
 
 		exit();
 	}
@@ -146,7 +143,7 @@ class AdsController extends AppController
 			if (isset($_GET['historic'])) $row['Ad']['impressions'] += $row['Ad']['historic_impressions'];
 
 			// This needs to be sorted @todo: fixme! 
-			// $row['Ad']['impressions'] += $this->Analytic->hits('Ad', 'Impression', $row['Ad']['id']);  
+			$row['Ad']['impressions'] += $this->Analytic->hits('Ad', 'Impression', $row['Ad']['id']);
 			$row['Ad']['clicks'] += $this->Analytic->hits('Ad', 'Click', $row['Ad']['id']);
 		}
 

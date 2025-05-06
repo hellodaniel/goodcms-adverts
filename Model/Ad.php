@@ -85,9 +85,14 @@ class Ad extends AppModel
 		// Get the ads
 		$ads = array_merge($ads, $this->find('all', ['limit' => $count, 'conditions' => $conditions, 'order' => $order]));
 
-		// foreach ($ads as $ad) {		
-		//	ClassRegistry::init('Analytic')->hit('Ad', 'Impression', $ad['Ad']['title']);
-		// }
+		if (!empty($ads)) {
+			foreach ($ads as $ad) {
+				$this->updateAll(
+					['Ad.hits' => 'Ad.hits + 1'],
+					['Ad.id' => $ad['Ad']['id']]
+				);
+			}
+		}
 
 		if (count($ads) < $count && $fallback) {
 
@@ -128,19 +133,10 @@ class Ad extends AppModel
 
 	public function impression($id)
 	{
-
-		$this->updateAll(
-			['Ad.hits' => 'Ad.hits + 1'],
-			['Ad.id' => $id]
-		);
-
-
-		// Now do the DB things
-
 		ClassRegistry::init('Analytic')->hit('Ad', 'Impression', $id);
-
 		return true;
 	}
+
 
 
 	public function addTracking($url, $campaign = [])
