@@ -12,7 +12,7 @@ if (!isset($count)) $count = 1;
 // Fallback to a placeholder ad? (default: false)
 if (!isset($fallback)) $fallback = Configure::read('debug');
 
-$cache_key = 'ad-' . $type . '-' . $count . 'x' . Inflector::slug($url, '');
+$cache_key = 'ad-' . Inflector::slug($type) . '-' . $count . 'x' . Inflector::slug($url, '');
 
 $ads = Cache::read($cache_key);
 $ads = false;
