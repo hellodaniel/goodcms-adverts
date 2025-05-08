@@ -133,6 +133,22 @@ class AdsController extends AppController
 
 		$this->data = $this->Ad->find('all');
 
+		// Get a list of all ads that have been inactive for over a year
+		// and delete all their impressions from the analytics table
+		$inactive = $this->Ad->find('all', [
+			'conditions' => [
+				'Ad.enabled' => 0,
+				'Ad.modified <' => date('Y-m-d H:i:s', strtotime('-1 year'))
+			]
+		]);
+
+		if (!empty($inactive)) {
+			foreach ($inactive as $row) {
+				$this->Analytic->deleteAll(['category' => 'Ad', 'label' => $row['Ad']['id']]);
+			}
+		}
+
+
 		foreach ($this->request->data as &$row) {
 
 			// Get the clicks from the analytics engine	
