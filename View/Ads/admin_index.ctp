@@ -63,9 +63,9 @@ $this->set('options', [
 				<td>
 					<?= $row['Ad']['type'] ?>
 				</td>
-				<td><?= number_format($row['Ad']['hits']) ?> </td>
-				<td><?= number_format($row['Ad']['impressions']) ?> </td>
-				<td><?= number_format($row['Ad']['clicks']) ?> </td>
+				<td><?= $row['Ad']['hits'] ?> </td>
+				<td><?= $row['Ad']['impressions'] ?> </td>
+				<td><?= $row['Ad']['clicks'] ?> </td>
 				<td><?php
 
 					if ($row['Ad']['whitelist_urls']) echo '<label class="badge badge-default">Whitelist</label>';
