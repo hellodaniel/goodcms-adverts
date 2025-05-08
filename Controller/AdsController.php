@@ -143,8 +143,8 @@ class AdsController extends AppController
 			if (isset($_GET['historic'])) $row['Ad']['impressions'] += $row['Ad']['historic_impressions'];
 
 			// This needs to be sorted @todo: fixme! 
-			$row['Ad']['impressions'] += $this->Analytic->hits('Ad', 'Impression', $row['Ad']['id']);
-			$row['Ad']['clicks'] += $this->Analytic->hits('Ad', 'Click', $row['Ad']['id']);
+			$row['Ad']['impressions'] += $this->Analytic->hits('Ad', 'Impression', $row['Ad']['id'], date('Y-m-d', strtotime('-1 year')));
+			$row['Ad']['clicks'] += $this->Analytic->hits('Ad', 'Click', $row['Ad']['id'], date('Y-m-d', strtotime('-1 year')));
 		}
 
 		$this->layout = 'admin';
