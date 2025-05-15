@@ -133,6 +133,7 @@ class AdsController extends AppController
 
 		$this->data = $this->Ad->find('all');
 
+
 		// Get a list of all ads that have been inactive for over a year
 		// and delete all their impressions from the analytics table
 		$inactive = $this->Ad->find('all', [
@@ -159,7 +160,14 @@ class AdsController extends AppController
 			if (isset($_GET['historic'])) $row['Ad']['impressions'] += $row['Ad']['historic_impressions'];
 
 			// This needs to be sorted @todo: fixme! 
-			if ($row['Ad']['enabled'] || strtotime($row['Ad']['modified']) > time() - YEAR) {
+
+			$report = false;
+			if (strtotime($row['Ad']['modified']) > time() - YEAR)
+				$report = true;
+			if ($row['Ad']['enabled'] && (!$row['Ad']['end_date'] || strtotime($row['Ad']['end_date']) > time()))
+				$report = true;
+
+			if ($report) {
 				$row['Ad']['impressions'] += $this->Analytic->hits('Ad', 'Impression', $row['Ad']['id']);
 				$row['Ad']['clicks'] += $this->Analytic->hits('Ad', 'Click', $row['Ad']['id']);
 			} else {
