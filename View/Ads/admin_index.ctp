@@ -81,6 +81,3 @@ $this->set('options', [
 		<?php } ?>
 	</tbody>
 </table>
-
-
-<div class="alert alert-warning">n.b.: Due to the changes in impression algorithms we reset impresssions at <?= $this->App->shortDate(filemtime('../Plugin/Adverts/sql/02 Reset the numbers.sql')) ?>. If you want to see historic impressions prior to that date please <a href="?historic=true">click here.</a></div>
