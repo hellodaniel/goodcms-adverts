@@ -20,7 +20,11 @@ class AdsController extends AppController
 
 		$this->autoRender = false;
 
-		$src = $_GET['src'];
+		$src = isset($_GET['src']) ? $_GET['src'] : null;
+		if (empty($src)) {
+			throw new NotFoundException('Invalid source parameter');
+		}
+
 		$ext = pathinfo($id)['extension'];
 		$id = str_replace('.' . $ext, '', $id);
 
@@ -36,7 +40,17 @@ class AdsController extends AppController
 		}
 
 		if (!$content) {
+			// Validate that the file exists and is readable before processing
+			if (!file_exists($src) || !is_readable($src)) {
+				throw new NotFoundException('File not found or not readable');
+			}
+
 			$content = file_get_contents($src);
+			if ($content === false) {
+				throw new InternalErrorException('Failed to read file content');
+			}
+
+			// Only call mime_content_type if we have a valid file
 			$mime = mime_content_type($src);
 			Cache::write('ad-' . md5($src), $content);
 			Cache::write('ad-' . md5($src), $content, 'long');
