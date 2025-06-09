@@ -40,10 +40,7 @@ class AdsController extends AppController
 		}
 
 		if (!$content) {
-			// Validate that the file exists and is readable before processing
-			if (!file_exists($src) || !is_readable($src)) {
-				throw new NotFoundException('File not found or not readable');
-			}
+
 
 			$content = file_get_contents($src);
 			if ($content === false) {
