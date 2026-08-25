@@ -109,7 +109,7 @@ class Ad extends AppModel
                 }
             }
 
-            if ($fallback && empty($ads)) {
+            if ($fallback && empty($ads) && CakeSession::read('User.role') == 'dev') {
                 $conditions = [];
 
                 if (is_numeric($type)) {
