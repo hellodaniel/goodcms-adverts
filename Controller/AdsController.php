@@ -39,7 +39,7 @@ class AdsController extends AppController
             if ($content) Cache::write('ad-' . md5($src), $content);
         }
 
-        if (!$content) {
+        if (!$content && !empty($src)) {
 
 
             $content = file_get_contents($src);
@@ -47,8 +47,6 @@ class AdsController extends AppController
                 throw new NotFoundException('Failed to read file content');
             }
 
-            // Only call mime_content_type if we have a valid file
-            $mime = mime_content_type($src);
             Cache::write('ad-' . md5($src), $content);
             Cache::write('ad-' . md5($src), $content, 'long');
         }
