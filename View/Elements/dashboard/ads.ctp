@@ -42,16 +42,17 @@ arsort($clicks);
 <div class="tile">
 
 	<h4 class="title">7 day top clicked ads</h4>
-	<div id="ad-click-chart" style="height: 250px"></div>
+	<div id="ad-click-chart" class="etch-chart"><div data-etch-plot></div></div>
 
 </div>
 
 <?php $this->append('plugins'); ?>
 <script>
-	var data = {
-		labels: <?= json_encode(array_keys($clicks)) ?>,
-		data: <?= json_encode(array_values($clicks)) ?>
-	};
-	var ads = new Grafs.Column('#ad-click-chart', data);
+	// Ranked list keeps long ad titles readable
+	Etch.render(document.getElementById('ad-click-chart'), {
+		type: 'bar-list',
+		max: <?= max($clicks) ?>,
+		values: <?= json_encode(array_map(fn($label, $value) => ['label' => (string)$label, 'value' => $value], array_keys($clicks), $clicks)) ?>
+	});
 </script>
 <?php $this->end(); ?>
